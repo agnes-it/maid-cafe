@@ -75,6 +75,7 @@ export default class Home extends Component {
 	render() {
 		return (
 			<div class={style.home}>
+				<h1 class={style.title}>Bills</h1>
 				<ul class={style.bill_list}>
 					{this.state.bills.map(bill => (
 						<li onClick={() => this.changeBill(bill.id)} class={bill.active
