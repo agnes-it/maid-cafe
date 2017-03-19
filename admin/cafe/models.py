@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 import moneyed
 from djmoney.models.fields import MoneyField
 
@@ -14,8 +15,10 @@ class Menu(models.Model):
     available = models.BooleanField(default=True)
 
 class Bill(models.Model):
+    maid = models.ForeignKey(User)
     client = models.CharField(max_length=255)
     table = models.ForeignKey(Table)
     start_bill = models.DateTimeField(auto_now_add=True)
     end_bill = models.DateTimeField(blank=True)
     menu = models.ManyToManyField(Menu)
+    additional_info = models.TextField()
