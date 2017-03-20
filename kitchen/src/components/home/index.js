@@ -14,14 +14,14 @@ export default class Home extends Component {
 		this.changeBill = this.changeBill.bind(this);
 	}
 
-  componentWillMount() {
-    getBills().then(result => {
-      this.setState({
-        ...this.state,
-        bills: result.data
-      });
-    });
-  }
+	componentWillMount() {
+		getBills().then(result => {
+			this.setState({
+				...this.state,
+				bills: result.data
+			});
+		});
+	}
 
 	changeBill(id) {
 		const bills = this.state.bills.map(bill => {
@@ -42,6 +42,14 @@ export default class Home extends Component {
 	}
 
 	render() {
+		if (!this.state.bills.length) {
+			return (
+				<div class={style.home}>
+					<h1>No bills yet. Maybe we can take a breath.</h1>
+				</div>
+			);
+		}
+
 		return (
 			<div class={style.home}>
 				<h1 class={style.title}>Bills</h1>
@@ -63,7 +71,7 @@ export default class Home extends Component {
 								<span>{bill.menu.join(', ')}</span>
 								{bill.additional_info
 									? <p>
-											Informações: {bill.additional_info}
+											Info: {bill.additional_info}
 										</p>
 									: null}
 							</div>
