@@ -6,28 +6,28 @@ import 'style';
 /*global sinon,expect*/
 
 describe('App', () => {
-	let scratch;
+  let scratch;
 
-	before( () => {
-		scratch = document.createElement('div');
-		(document.body || document.documentElement).appendChild(scratch);
-	});
+  before( () => {
+    scratch = document.createElement('div');
+    (document.body || document.documentElement).appendChild(scratch);
+  });
 
-	beforeEach( () => {
-		scratch.innerHTML = '';
-	});
+  beforeEach( () => {
+    scratch.innerHTML = '';
+  });
 
-	after( () => {
-		scratch.parentNode.removeChild(scratch);
-		scratch = null;
-	});
+  after( () => {
+    scratch.parentNode.removeChild(scratch);
+    scratch = null;
+  });
 
 
-	describe('routing', () => {
-		it('should render the kitchen panel', () => {
-			render(<App />, scratch);
+  describe('routing', () => {
+    it('should render the kitchen panel', () => {
+      render(<App />, scratch);
 
-			expect(scratch.innerHTML).to.contain('Bills');
-		});
-	});
+      expect(scratch.innerHTML).to.contain('Bills');
+    });
+  });
 });
