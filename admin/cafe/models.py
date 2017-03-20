@@ -33,4 +33,5 @@ class Bill(models.Model):
     start_bill = models.DateTimeField(auto_now_add=True)
     end_bill = models.DateTimeField(blank=True, null=True)
     menu = models.ManyToManyField(Menu)
+    finish = models.BooleanField(default=False)
     additional_info = models.TextField(blank=True, null=True)

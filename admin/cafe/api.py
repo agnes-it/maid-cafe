@@ -13,11 +13,11 @@ class BillSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Bill
         fields = ('id', 'maid', 'client', 'table',
-                  'start_bill', 'end_bill', 'menu', 'additional_info')
+                  'start_bill', 'end_bill', 'menu', 'finish', 'additional_info')
 
 # ViewSets define the view behavior.
 class BillViewSet(viewsets.ModelViewSet):
-    queryset = Bill.objects.all()
+    queryset = Bill.objects.filter(finish=False)
     serializer_class = BillSerializer
 
 # Routers provide an easy way of automatically determining the URL conf.
