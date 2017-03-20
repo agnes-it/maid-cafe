@@ -5,3 +5,4 @@
 /coverage
 /.idea
 yarn.lock
+src/config.js

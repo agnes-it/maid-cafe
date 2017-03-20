@@ -1,5 +1,6 @@
 import {h, Component} from 'preact';
 import style from './style';
+import { getBills } from '../../api';
 
 export default class Home extends Component {
 	constructor() {
@@ -7,52 +8,20 @@ export default class Home extends Component {
 
 		this.state = {
 			currentBill: 1,
-			bills: [
-				{
-					id: 1,
-					table: 1,
-					start_bill: new Date(),
-					active: true,
-					additional_info: `pouca batata frita.`,
-					menu: [
-						{
-							item: "Combo 3"
-						}, {
-							item: "Milk Shake Morango"
-						}
-					]
-				}, {
-					id: 2,
-					table: 2,
-					start_bill: new Date(),
-					active: false,
-					additional_info: ``,
-					menu: [
-						{
-							item: "Filé à Parmegiana"
-						}, {
-							item: "Coca-Cola 2L"
-						}
-					]
-				}, {
-					id: 3,
-					table: 3,
-					start_bill: new Date(),
-					active: false,
-					additional_info: ``,
-					menu: [
-						{
-							item: "Mesa de Sushi"
-						}, {
-							item: "Coca-Cola Lata"
-						}
-					]
-				}
-			]
+			bills: []
 		};
 
 		this.changeBill = this.changeBill.bind(this);
 	}
+
+  componentWillMount() {
+    getBills().then(result => {
+      this.setState({
+        ...this.state,
+        bills: result.data
+      });
+    });
+  }
 
 	changeBill(id) {
 		const bills = this.state.bills.map(bill => {
@@ -86,12 +55,12 @@ export default class Home extends Component {
 									Table: {bill.table}
 								</h3>
 								<small>
-									Start at: {bill.start_bill.toLocaleTimeString()}
+									Start at: {(new Date(bill.start_bill)).toLocaleTimeString()}
 								</small>
 								<a onClick={() => {}} class={style.btn}>Finish</a>
 							</div>
 							<div class={style.table_desc}>
-								<span>{bill.menu.map(choice => choice.item).join(', ')}</span>
+								<span>{bill.menu.join(', ')}</span>
 								{bill.additional_info
 									? <p>
 											Informações: {bill.additional_info}
