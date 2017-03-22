@@ -16,11 +16,13 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from cafe.api import router
+from rest_framework.authtoken.views import obtain_auth_token
 
 
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
+    url(r'^api-token-auth/', obtain_auth_token),
     url(r'^api-auth/',
         include('rest_framework.urls', namespace='rest_framework')),
 ]

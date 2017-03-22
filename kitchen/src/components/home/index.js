@@ -1,6 +1,6 @@
 import {h, Component} from 'preact';
 import style from './style';
-import {getBills} from '../../api';
+import {getBills, finishBill} from '../../api';
 
 export default class Home extends Component {
   constructor() {
@@ -12,9 +12,15 @@ export default class Home extends Component {
     };
 
     this.changeBill = this.changeBill.bind(this);
+    this.finishBill = this.finishBill.bind(this);
+    this.getBills = this.getBills.bind(this);
   }
 
   componentWillMount() {
+    this.getBills();
+  }
+
+  getBills() {
     getBills().then(result => {
       this.setState({
         ...this.state,
@@ -38,6 +44,12 @@ export default class Home extends Component {
       ...this.state,
       currentBill: id,
       bills
+    });
+  }
+
+  finishBill(bill) {
+    finishBill(bill).then(() => {
+      this.getBills();
     });
   }
 
@@ -65,7 +77,7 @@ export default class Home extends Component {
                 <small>
                   Start at: {(new Date(bill.start_bill)).toLocaleTimeString()}
                 </small>
-                <a onClick={() => {}} class={style.btn}>Finish</a>
+                <a onClick={() => this.finishBill(bill)} class={style.btn}>Finish</a>
               </div>
               <div class={style.table_desc}>
                 <span>{bill.menu.join(', ')}</span>
