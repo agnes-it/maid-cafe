@@ -9,7 +9,7 @@ module not real-time to create/update/delete information sent to maid and kitche
 
 # Maid
 
-module real-time to consume information from admin and create bills sent to kitchen and paid by clients.
+module real-time to consume information from admin and create bills and send it to kitchen.
 
 # Kitchen
 
