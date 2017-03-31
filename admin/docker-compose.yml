@@ -1,0 +1,23 @@
+version: '2'
+services:
+  redis:
+    image: redis
+  db:
+    image: postgres:9.4
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data
+  web:
+    build: .
+    command: bash -c "while ! nc -w 1 -z db 5432; do sleep 0.1; done; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
+    image: maidcafe 
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8000:8000"
+    environment:
+      IN_DOCKER: 1
