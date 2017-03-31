@@ -3,6 +3,14 @@ Maid Cafe Admin
 
 module not real-time to create/update/delete information sent to maid and kitchen apps.
 
+# Using Docker
+
+You only need to run:
+
+```
+$ docker-compose up
+```
+
 # Installation
 
 Create virtualenv:
