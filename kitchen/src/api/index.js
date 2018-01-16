@@ -8,5 +8,10 @@ export function getBills() {
 }
 
 export function finishBill(bill) {
-  return api.put(`bills/${bill.id}/`, { ...bill, finish: true });
+
+  return api.put(`bills/${bill.id}/`, {
+    ...bill,
+    finish: true,
+    end_bill: new Date()
+  });
 }
