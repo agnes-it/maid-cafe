@@ -22,9 +22,9 @@ export default class Clock extends Component {
     const date = new Date;
     this.setState({
       ...this.state,
-      hours: date.getHours(),
-      minutes: date.getMinutes(),
-      seconds: date.getSeconds()
+      hours: `${date.getHours()}`.padStart(2, '0'),
+      minutes: `${date.getMinutes()}`.padStart(2, '0'),
+      seconds: `${date.getSeconds()}`.padStart(2, '0')
     });
   }
 
