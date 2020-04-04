@@ -1,17 +1,22 @@
-version: '2'
+version: '3'
 services:
   redis:
     image: redis
+    networks:
+        - static-network
   db:
     image: postgres:9.4
     environment:
       POSTGRES_PASSWORD: password
+    networks:
+        - static-network
     volumes:
       - ./dbdata:/var/lib/postgresql/data
   web:
     build: .
     command: bash -c "while ! nc -w 1 -z db 5432; do sleep 0.1; done; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
-    image: maidcafe 
+    image: maidcafe
+    hostname: maidcafeadm
     volumes:
       - .:/code
     depends_on:
@@ -21,3 +26,16 @@ services:
       - "8000:8000"
     environment:
       IN_DOCKER: 1
+    networks:
+        static-network:
+            ipv4_address: 172.20.128.2
+  avahi:
+    image: solidnerd/avahi:0.7
+    volumes:
+        - ./avahi:/etc/avahi
+    network_mode: 'host'
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
