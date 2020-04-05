@@ -1,6 +1,6 @@
-import { h, Component } from 'preact';
+import React from 'react';
 import Clock from '../clock';
-import style from './style';
+import './style.less';
 
 export default class Header extends Component {
   render() {

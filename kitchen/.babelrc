@@ -1,11 +1,14 @@
 {
-  "sourceMaps": true,
-  "presets": [
-    ["es2015", { "loose":true }],
-    "stage-0"
+  presets: [
+    [
+      '@babel/preset-env',
+      {
+        modules: false
+      }
+    ],
+    '@babel/preset-react'
   ],
-  "plugins": [
-    ["transform-decorators-legacy"],
-    ["transform-react-jsx", { "pragma": "h" }]
+  plugins: [
+    'react-hot-loader/babel'
   ]
 }

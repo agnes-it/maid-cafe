@@ -1,8 +1,16 @@
-/node_modules
-/npm-debug.log
-/build
+
+.cache/
+coverage/
+dist/*
+!dist/index.html
+node_modules/
+*.log
+
+# OS generated files
 .DS_Store
-/coverage
-/.idea
-yarn.lock
-src/config.js
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

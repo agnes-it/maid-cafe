@@ -1,5 +1,5 @@
-import {h, Component} from 'preact';
-import style from './style';
+import React from 'react';
+import './style.less';
 import {getBills, finishBill} from '../../api';
 
 export default class Home extends Component {
