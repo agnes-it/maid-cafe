@@ -54,10 +54,8 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: require('html-webpack-template'),
-      inject: false,
-      appMountId: 'app',
-      filename: 'index.html'
+      template: 'src/index.ejs',
+      minify: true
     }),
     new LodashModuleReplacementPlugin
   ],

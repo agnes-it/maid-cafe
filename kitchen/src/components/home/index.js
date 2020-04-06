@@ -2,7 +2,7 @@ import React from 'react';
 import './style.less';
 import {getBills, finishBill} from '../../api';
 
-export default class Home extends Component {
+export default class Home extends React.Component {
   constructor() {
     super();
 
@@ -79,7 +79,7 @@ export default class Home extends Component {
                 </small>
                 <a onClick={() => this.finishBill(bill)} class={style.btn}>Finish</a>
               </div>
-              <div class={style.table_desc}>
+              <div>
                 <span>{bill.menu.join(', ')}</span>
                 {bill.additional_info
                   ? <p>
