@@ -3,7 +3,7 @@ Django==1.10.6
 django-cors-headers==2.0.2
 django-filter==1.0.1
 django-money==0.10.2
-djangorestframework==3.6.2
+djangorestframework==3.9.1
 Markdown==2.6.8
 packaging==16.8
 py-moneyed==0.6.0
