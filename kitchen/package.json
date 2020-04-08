@@ -1,10 +1,10 @@
 {
-  "name": "empty-project",
+  "name": "maidcafe-kitchen",
   "version": "1.0.0",
-  "description": "",
+  "description": "module real-time to consume information from admin and create bills sent to kitchen and paid by clients.",
   "main": "index.js",
   "keywords": [],
-  "author": "",
+  "author": "@snotr and @netoguimaraes",
   "license": "ISC",
   "scripts": {
     "clean": "rm dist/bundle.js",
