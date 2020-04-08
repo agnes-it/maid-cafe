@@ -23,7 +23,7 @@ const config = {
         test: /\.less$/,
         use: [
           'style-loader',
-          'css-loader',
+          { loader: 'css-loader', options: { modules: true }},
           'less-loader'
         ]
       },
@@ -46,7 +46,9 @@ const config = {
       '.jsx'
     ],
     alias: {
-      'react-dom': '@hot-loader/react-dom'
+      'react-dom': '@hot-loader/react-dom',
+      components: path.resolve(__dirname, "src/components"),    // used for tests
+      style: path.resolve(__dirname, "src/style"),
     }
   },
   devServer: {
