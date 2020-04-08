@@ -1,8 +1,8 @@
-import {h, Component} from 'preact';
-import style from './style';
+import React from 'react';
+import style from './style.less';
 import {getBills, finishBill} from '../../api';
 
-export default class Home extends Component {
+export default class Home extends React.Component {
   constructor() {
     super();
 
@@ -56,30 +56,30 @@ export default class Home extends Component {
   render() {
     if (!this.state.bills.length) {
       return (
-        <div class={style.home}>
+        <div className={style.home}>
           <h1>No bills yet. Maybe we can take a breath.</h1>
         </div>
       );
     }
 
     return (
-      <div class={style.home}>
-        <h1 class={style.title}>Bills</h1>
-        <ul class={style.bill_list}>
+      <div className={style.home}>
+        <h1 className={style.title}>Bills</h1>
+        <ul className={style.bill_list}>
           {this.state.bills.map(bill => (
-            <li onClick={() => this.changeBill(bill.id)} class={bill.active
+            <li onClick={() => this.changeBill(bill.id)} className={bill.active
               ? style.active
               : null}>
-              <div class={style.table_info}>
+              <div className={style.table_info}>
                 <h3>
                   Table: {bill.table}
                 </h3>
                 <small>
                   Start at: {(new Date(bill.start_bill)).toLocaleTimeString()}
                 </small>
-                <a onClick={() => this.finishBill(bill)} class={style.btn}>Finish</a>
+                <a onClick={() => this.finishBill(bill)} className={style.btn}>Finish</a>
               </div>
-              <div class={style.table_desc}>
+              <div>
                 <span>{bill.menu.join(', ')}</span>
                 {bill.additional_info
                   ? <p>

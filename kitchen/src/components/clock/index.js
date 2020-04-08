@@ -1,7 +1,7 @@
-import { h, Component } from 'preact';
-import style from './style';
+import React from 'react';
+import './style.less';
 
-export default class Clock extends Component {
+export default class Clock extends React.Component {
   constructor() {
     super();
 
