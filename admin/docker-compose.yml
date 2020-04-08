@@ -11,7 +11,7 @@ services:
     networks:
         - static-network
     volumes:
-      - ./dbdata:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
   web:
     build: .
     command: bash -c "while ! nc -w 1 -z db 5432; do sleep 0.1; done; python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
@@ -39,3 +39,5 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/16
+volumes:
+  postgres:
