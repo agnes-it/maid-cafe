@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ZeroState from '../zero-state';
+import Card from '../card';
 import { compose, pick } from '../../lib/functional';
 import {getBills, finishBill} from '../../api';
 
