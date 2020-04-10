@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 
 function tick(date) {
@@ -12,7 +12,7 @@ function tick(date) {
 export default function Clock() {
   const [clock, setClock] = useState(tick(new Date));
 
-  React.useEffect(() => {
+  useEffect(() => {
     setTimeout(() => {
       setClock(tick(new Date));
     }, 100);

@@ -1,93 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ZeroState from '../zero-state';
+import { compose, pick } from '../../lib/functional';
 import {getBills, finishBill} from '../../api';
 
 
-export default class Home extends React.Component {
-  constructor() {
-    super();
+export default function Home() {
+  const [bills, setBills] = useState([]);
 
-    this.state = {
-      currentBill: 1,
-      bills: []
-    };
+  const appliedSetBills = compose(setBills, pick('data'));
 
-    this.changeBill = this.changeBill.bind(this);
-    this.finishBill = this.finishBill.bind(this);
-    this.getBills = this.getBills.bind(this);
+  const fetchBills = () => getBills().then(appliedSetBills).catch(console.error);
+  const handleCloseBill = bill => finishBill(bill).then(fetchBills).catch(console.error);
+  
+  useEffect(() => {
+    fetchBills();
+  }, []);
+
+  if (!bills.length) {
+    return <ZeroState />;
   }
 
-  componentWillMount() {
-    this.getBills();
-  }
-
-  getBills() {
-    getBills().then(result => {
-      this.setState({
-        ...this.state,
-        bills: result.data
-      });
-    });
-  }
-
-  changeBill(id) {
-    const bills = this.state.bills.map(bill => {
-      if (bill.id === id) {
-        bill.active = true;
-      } else {
-        bill.active = false;
-      }
-
-      return bill;
-    });
-
-    this.setState({
-      ...this.state,
-      currentBill: id,
-      bills
-    });
-  }
-
-  finishBill(bill) {
-    finishBill(bill).then(() => {
-      this.getBills();
-    });
-  }
-
-  render() {
-    if (!this.state.bills.length) {
-      return <ZeroState />;
-    }
-
-    return (
-      <div>
-        <h1 className={style.title}>Bills</h1>
-        <ul className={style.bill_list}>
-          {this.state.bills.map(bill => (
-            <li onClick={() => this.changeBill(bill.id)} className={bill.active
-              ? style.active
-              : null}>
-              <div className={style.table_info}>
-                <h3>
-                  Table: {bill.table}
-                </h3>
-                <small>
-                  Start at: {(new Date(bill.start_bill)).toLocaleTimeString()}
-                </small>
-                <a onClick={() => this.finishBill(bill)} className={style.btn}>Finish</a>
-              </div>
-              <div>
-                <span>{bill.menu.join(', ')}</span>
-                {bill.additional_info
-                  ? <p>
-                      Info: {bill.additional_info}
-                    </p>
-                  : null}
-              </div>
-            </li>
-          ))}
+  return (
+    <div>
+        <h1>Bills</h1>
+        <ul>
+          {bills.map(bill => <Card bill={bill} onFinishBill={handleCloseBill} />)}
         </ul>
       </div>
-    );
-  }
+  );
 }
