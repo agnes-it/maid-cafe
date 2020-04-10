@@ -1,37 +1,23 @@
-import React from 'react';
-import './style.less';
+import React, { useState } from 'react';
 
-export default class Clock extends React.Component {
-  constructor() {
-    super();
+function tick(date) {
+  return {
+    hours: String(date.getHours()).padStart(2, '0'),
+    minutes: String(date.getMinutes()).padStart(2, '0'),
+    seconds: String(date.getSeconds()).padStart(2, '0')
+  };
+}
 
-    this.state = {
-      hours: '',
-      minutes: '',
-      seconds: ''
-    };
+export default function Clock() {
+  const [clock, setClock] = useState(tick(new Date));
 
-    this.tick = this.tick.bind(this);
-  }
+  React.useEffect(() => {
+    setTimeout(() => {
+      setClock(tick(new Date));
+    }, 100);
+  }, [clock]);
 
-  componentDidMount() {
-    this.tick();
-  }
-
-  tick() {
-    const date = new Date;
-    this.setState({
-      ...this.state,
-      hours: `${date.getHours()}`.padStart(2, '0'),
-      minutes: `${date.getMinutes()}`.padStart(2, '0'),
-      seconds: `${date.getSeconds()}`.padStart(2, '0')
-    });
-  }
-
-  render() {
-    setTimeout(this.tick, 100);
-    return (
-      <h1>{this.state.hours}:{this.state.minutes}:{this.state.seconds}</h1>
-    );
-  }
+  return (
+    <h1>{clock.hours}:{clock.minutes}:{clock.seconds}</h1>
+  );
 }
