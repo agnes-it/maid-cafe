@@ -56,14 +56,14 @@ export default class Home extends React.Component {
   render() {
     if (!this.state.bills.length) {
       return (
-        <div className="m-10-5 flex p-6 bg-gray-300">
+        <div className="m-10 flex p-6 bg-gray-300">
           <h1>No bills yet. Maybe we can take a breath.</h1>
         </div>
       );
     }
 
     return (
-      <div className={"bg-red"}>
+      <div>
         <h1 className={style.title}>Bills</h1>
         <ul className={style.bill_list}>
           {this.state.bills.map(bill => (
