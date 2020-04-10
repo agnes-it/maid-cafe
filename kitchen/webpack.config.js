@@ -23,8 +23,9 @@ const config = {
         test: /\.less$/,
         use: [
           'style-loader',
-          { loader: 'css-loader', options: { modules: true }},
-          'less-loader'
+          { loader: 'css-loader' },
+          'less-loader',
+          { loader: 'postcss-loader' }
         ]
       },
       {
