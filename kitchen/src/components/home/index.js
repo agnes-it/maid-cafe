@@ -1,6 +1,7 @@
 import React from 'react';
-import style from './style.less';
+import ZeroState from '../zero-state';
 import {getBills, finishBill} from '../../api';
+
 
 export default class Home extends React.Component {
   constructor() {
@@ -55,11 +56,7 @@ export default class Home extends React.Component {
 
   render() {
     if (!this.state.bills.length) {
-      return (
-        <div className="m-10 flex p-6 bg-gray-300">
-          <h1>No bills yet. Maybe we can take a breath.</h1>
-        </div>
-      );
+      return <ZeroState />;
     }
 
     return (
