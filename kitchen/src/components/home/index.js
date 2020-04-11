@@ -24,9 +24,9 @@ export default function Home() {
   return (
     <div>
         <h1>Bills</h1>
-        <ul>
-          {bills.map(bill => <Card bill={bill} onFinishBill={handleCloseBill} />)}
-        </ul>
+        <main>
+          {bills.map((bill, index) => <Card key={index} bill={bill} onFinishBill={handleCloseBill} />)}
+        </main>
       </div>
   );
 }

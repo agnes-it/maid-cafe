@@ -1,28 +1,46 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import defaultImage from '../../assets/food.jpg';
 
 
 export default function Card({ bill, onFinishBill }) {
     return (
-        <li>
-            <div>
-            <h3>
-                Table: {bill.table}
-            </h3>
-            <small>
-                Start at: {(new Date(bill.start_bill)).toLocaleTimeString()}
-            </small>
-            <a onClick={() => onFinishBill(bill)}>Finish</a>
+        <div className="max-w-sm w-full lg:max-w-full lg:flex">
+            <div
+                className="h-48 lg:h-a0uto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
+                style={{
+                    backgroundSize: 'cover',
+                    backgroundImage: `url(${defaultImage})`
+                }}
+                title="Woman holding a mug"
+            >
             </div>
-            <div>
-            <span>{bill.menu.join(', ')}</span>
-            {bill.additional_info
-                ? <p>
-                    Info: {bill.additional_info}
-                </p>
-                : null}
+            <div
+                className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal"
+            >
+                <div className="mb-8">
+                    {bill.menu.map(menu => (
+                        <div className="text-gray-900 font-bold text-xl mb-2">{menu}</div>
+                    ))}
+                    <p className="text-gray-700 text-base">
+                        {bill.additional_info
+                            ? `Info: ${bill.additional_info}`
+                            : 'Complete'}
+                    </p>
+                </div>
+                <div className="flex items-center">
+                    <div className="text-sm">
+                        <p className="text-gray-900 leading-none">Table: {bill.table}</p>
+                        <p className="text-gray-600">Start at: {(new Date(bill.start_bill)).toLocaleTimeString()}</p>
+                    </div>
+                </div>
+                <button
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    onClick={() => onFinishBill(bill)}>
+                        Finish
+                </button>
             </div>
-        </li>
+        </div>
     );
 };
 
