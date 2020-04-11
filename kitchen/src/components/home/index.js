@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <main className="mt-8">
       <GridList
-        chunkSize="3"
+        chunkSize="4"
         list={bills}
         component={(bill, index) => <Card key={index} bill={bill} onFinishBill={handleCloseBill} />}
       />
