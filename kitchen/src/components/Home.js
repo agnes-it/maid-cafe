@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import ZeroState from '../zero-state';
-import Card from '../card';
-import GridList from '../GridList';
-import { compose, pick } from '../../lib/functional';
-import {getBills, finishBill} from '../../api';
+import ZeroState from './ZeroState';
+import Card from './Card';
+import GridList from './GridList';
+import { compose, pick } from '../lib/functional';
+import {getBills, finishBill} from '../api';
 
 
 export default function Home() {

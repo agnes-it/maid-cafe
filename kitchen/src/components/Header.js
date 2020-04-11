@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Clock from '../clock';
+import Clock from './Clock';
 
 
 export default function Header({ title }) {

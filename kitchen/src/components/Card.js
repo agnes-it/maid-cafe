@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import defaultImage from '../../assets/food.jpg';
+import defaultImage from '../assets/food.jpg';
 
 
 export default function Card({ bill, onFinishBill }) {

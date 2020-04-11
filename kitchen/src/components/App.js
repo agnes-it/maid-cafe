@@ -1,5 +1,5 @@
-import Header from './header';
-import Home from './home';
+import Header from './Header';
+import Home from './Home';
 import React from "react";
 import { hot } from 'react-hot-loader/root';
 
