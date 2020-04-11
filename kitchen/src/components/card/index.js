@@ -7,7 +7,7 @@ export default function Card({ bill, onFinishBill }) {
     return (
         <div className="max-w-sm w-full lg:max-w-full lg:flex">
             <div
-                className="lg:h-a0uto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
+                className="lg:h-a0uto lg:w-32 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
                 style={{
                     backgroundSize: 'contain',
                     backgroundImage: `url(${defaultImage})`
