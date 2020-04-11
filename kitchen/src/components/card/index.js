@@ -7,21 +7,21 @@ export default function Card({ bill, onFinishBill }) {
     return (
         <div className="max-w-sm w-full lg:max-w-full lg:flex">
             <div
-                className="h-48 lg:h-a0uto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
+                className="lg:h-a0uto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
                 style={{
-                    backgroundSize: 'cover',
+                    backgroundSize: 'contain',
                     backgroundImage: `url(${defaultImage})`
                 }}
-                title="Woman holding a mug"
+                title="Food"
             >
             </div>
             <div
-                className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal"
+                className="w-full lg:max-w-full border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal"
             >
                 <div className="mb-8">
-                    {bill.menu.map(menu => (
-                        <div className="text-gray-900 font-bold text-xl mb-2">{menu}</div>
-                    ))}
+                    <div className="text-gray-900 font-bold text-xl mb-2">
+                        {bill.menu.join(', ')}
+                    </div>
                     <p className="text-gray-700 text-base">
                         {bill.additional_info
                             ? `Info: ${bill.additional_info}`
