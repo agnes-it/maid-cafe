@@ -45,8 +45,8 @@ export default function Card({ bill, onFinishBill }) {
 };
 
 Card.propTypes = {
-    bill: PropTypes.object,
-    onFinishBill: PropTypes.func
+    bill: PropTypes.object.isRequired,
+    onFinishBill: PropTypes.func.isRequired
 };
 
 Card.defaultProps = {};
