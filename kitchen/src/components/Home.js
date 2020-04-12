@@ -3,6 +3,7 @@ import ZeroState from './ZeroState';
 import Card from './Card';
 import GridList from './GridList';
 import { compose, pick } from '../lib/functional';
+import { polling } from '../lib/polling'
 import {getBills, finishBill} from '../api';
 
 
@@ -11,11 +12,15 @@ export default function Home() {
 
   const appliedSetBills = compose(setBills, pick('data'));
 
-  const fetchBills = () => getBills().then(appliedSetBills).catch(console.error);
+  const fetchBills = () => getBills().then(result => {
+    appliedSetBills(result);
+    return result;
+  }).catch(console.error);
   const handleCloseBill = bill => finishBill(bill).then(fetchBills).catch(console.error);
   
   useEffect(() => {
     fetchBills();
+    polling(fetchBills);
   }, []);
 
   if (!bills.length) {
