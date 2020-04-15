@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from .models import Order, Request, Table, Menu
 from rest_framework import routers, serializers, viewsets
 from rest_framework.validators import UniqueValidator
+from rest_framework.permissions import IsAuthenticated
 
 # Serializers define the API representation.
 class RequestSerializer(serializers.HyperlinkedModelSerializer):
@@ -30,6 +31,7 @@ class RequestViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.filter(paid=False)
     serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
