@@ -26,12 +26,31 @@ class Menu(models.Model):
     def __unicode__(self):
         return self.item
 
-class Bill(models.Model):
+class Order(models.Model):
+    client = models.CharField(max_length=255)
+    table = models.ForeignKey(Table)
+    paid = models.BooleanField(default=False)
+    start_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{customer} - {table} [{start}]".format(customer=self.client, table=self.table.label, start=self.start_at)
+
+    def __unicode__(self):
+        return "{customer} - {table} [{start}]".format(customer=self.client, table=self.table.label, start=self.start_at)
+
+class Request(models.Model):
     maid = models.ForeignKey(User)
     client = models.CharField(max_length=255)
     table = models.ForeignKey(Table)
-    start_bill = models.DateTimeField(auto_now_add=True)
-    end_bill = models.DateTimeField(blank=True, null=True)
+    order = models.ForeignKey(Order)
+    start_at = models.DateTimeField(auto_now_add=True)
+    end_at = models.DateTimeField(blank=True, null=True)
     menu = models.ManyToManyField(Menu)
     finish = models.BooleanField(default=False)
     additional_info = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return "{customer} - {table} [{start}]".format(customer=self.client, table=self.table.label, start=self.start_at)
+
+    def __unicode__(self):
+        return "{customer} - {table} [{start}]".format(customer=self.client, table=self.table.label, start=self.start_at)
