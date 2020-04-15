@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 from django.contrib.auth.models import User
-from .models import Request, Table, Menu
+from .models import Order, Request, Table, Menu
 from rest_framework import routers, serializers, viewsets
 from rest_framework.validators import UniqueValidator
 
@@ -15,11 +15,23 @@ class RequestSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'maid', 'client', 'table',
                   'start_at', 'end_at', 'menu', 'finish', 'additional_info')
 
+class OrderSerializer(serializers.HyperlinkedModelSerializer):
+    table = serializers.SlugRelatedField(queryset=Table.objects.all(), slug_field="label")
+    
+    class Meta:
+        model = Order
+        fields = ('id', 'table', 'start_at', 'end_at', 'paid')
+
 # ViewSets define the view behavior.
 class RequestViewSet(viewsets.ModelViewSet):
     queryset = Request.objects.filter(finish=False)
     serializer_class = RequestSerializer
 
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.filter(paid=False)
+    serializer_class = OrderSerializer
+
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'requests', RequestViewSet)
+router.register(r'orders', OrderViewSet)

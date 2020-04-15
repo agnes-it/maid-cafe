@@ -31,6 +31,7 @@ class Order(models.Model):
     table = models.ForeignKey(Table)
     paid = models.BooleanField(default=False)
     start_at = models.DateTimeField(auto_now_add=True)
+    end_at = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return "{customer} - {table} [{start}]".format(customer=self.client, table=self.table.label, start=self.start_at)
