@@ -31,11 +31,11 @@ export default function Card({ bill, onFinishBill }) {
                 <div className="flex items-center">
                     <div className="text-sm">
                         <p className="text-gray-900 leading-none">Table: {bill.table}</p>
-                        <p className="text-gray-600">Start at: {(new Date(bill.start_bill)).toLocaleTimeString()}</p>
+                        <p className="text-gray-600">Start at: {(new Date(bill.start_at)).toLocaleTimeString()}</p>
                     </div>
                 </div>
                 <button
-                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-2"
                     onClick={() => onFinishBill(bill)}>
                         Finish
                 </button>
