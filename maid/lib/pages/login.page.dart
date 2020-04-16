@@ -7,7 +7,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String _status = 'no-action';
+  String _status = '';
   String _username = "";
   String _password = "";
   final TextEditingController _usernameFilter = new TextEditingController();
@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
             _buildTextFields(),
             new RaisedButton(
               child: new Text(
-                'Login for App (${this._status})'
+                'Login'
               ),
               onPressed: () {
                 setState(() => this._status = 'loading');
@@ -61,6 +61,9 @@ class _LoginPageState extends State<LoginPage> {
                   }
                 });
               }
+            ),
+            new Text(
+              this._status
             ),
           ],
         ),
