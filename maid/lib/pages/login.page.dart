@@ -39,36 +39,63 @@ class _LoginPageState extends State<LoginPage> {
     appBar: new AppBar(
       title: new Text('Login'),
     ),
-    body: new Container(
-      padding: EdgeInsets.all(16.0),
-      child: new Center(
-        child: 
-        new Column(
-          children: <Widget>[
-            _buildTextFields(),
-            new RaisedButton(
-              child: new Text(
-                'Login'
-              ),
-              onPressed: () {
-                setState(() => this._status = 'loading');
-
-                appAuth.login(_username, _password).then((result) {
-                  if (result.isNotEmpty) {
-                    Navigator.of(context).pushReplacementNamed('/home');
-                  } else {
-                    setState(() => this._status = 'rejected');
+    body: Builder(
+      builder: (BuildContext context) {
+        return new Container(
+          padding: EdgeInsets.all(16.0),
+          child: new Center(
+            child: 
+            new Column(
+              children: <Widget>[
+                _buildTextFields(),
+                new RaisedButton(
+                  child: new Text(
+                    'Login'
+                  ),
+                  onPressed: () {
+                    
+                    Scaffold.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Logging...'),
+                              CircularProgressIndicator(),
+                            ],
+                          ),
+                        ),
+                      );
+                  
+                    appAuth.login(_username, _password).then((result) {
+                      if (result.isNotEmpty) {
+                        Navigator.of(context).pushReplacementNamed('/home');
+                      } else {
+                        Scaffold.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Login failure, please try again.'),
+                                  Icon(Icons.error),
+                                ],
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                      }
+                    });
                   }
-                });
-              }
+                ),
+              ],
             ),
-            new Text(
-              this._status
-            ),
-          ],
-        ),
-      ),
-    ),
+          ),
+        );
+      }
+    )   
   );
 
   Widget _buildTextFields() {
