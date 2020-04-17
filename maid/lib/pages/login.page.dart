@@ -53,7 +53,6 @@ class _LoginPageState extends State<LoginPage> {
                     'Login'
                   ),
                   onPressed: () {
-                    
                     Scaffold.of(context)
                       ..hideCurrentSnackBar()
                       ..showSnackBar(
@@ -67,7 +66,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       );
-                  
                     appAuth.login(_username, _password).then((result) {
                       if (result.isNotEmpty) {
                         Navigator.of(context).pushReplacementNamed('/home');
