@@ -2,6 +2,8 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const WebpackBar = require('webpackbar');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const config = {
   entry: [
@@ -16,8 +18,12 @@ const config = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        use: 'babel-loader',
-        exclude: /node_modules/
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        options: {
+          plugins: ['lodash'],
+          presets: [['@babel/env', { 'modules': false, 'targets': { 'node': 4 } } ]]
+        }
       },
       {
         test: /\.less$/,
@@ -53,14 +59,23 @@ const config = {
     }
   },
   devServer: {
-    contentBase: './dist'
+    contentBase: './dist',
+    noInfo: true,
+    stats: 'minimal'
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: 'src/index.ejs',
       minify: true
     }),
-    new LodashModuleReplacementPlugin
+    new LodashModuleReplacementPlugin({
+      'collections': true,
+      'paths': true,
+      'chaining': true,
+      'coercions': true
+    }),
+    new WebpackBar(),
+    //new BundleAnalyzerPlugin()
   ],
   optimization: {
     runtimeChunk: 'single',
