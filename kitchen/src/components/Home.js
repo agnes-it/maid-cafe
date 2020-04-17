@@ -4,11 +4,10 @@ import Card from './Card';
 import GridList from './GridList';
 import { compose, pick } from '../lib/functional';
 import { polling } from '../lib/polling'
-import { getBills, finishBill, serverTime } from '../api';
+import { getBills, finishBill } from '../api';
 
 
 export default function Home() {
-  serverTime().then(console.log)
   const [bills, setBills] = useState([]);
 
   const appliedSetBills = compose(setBills, pick('data'));

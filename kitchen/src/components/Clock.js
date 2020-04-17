@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 
-function tick(date) {
+function tick(dateStr) {
+  const date = new Date(dateStr); 
   return {
     hours: String(date.getHours()).padStart(2, '0'),
     minutes: String(date.getMinutes()).padStart(2, '0'),
@@ -9,12 +10,13 @@ function tick(date) {
   };
 }
 
-export default function Clock() {
-  const [clock, setClock] = useState(tick(new Date));
+export default function Clock(props) {
+  const rightDate = new Date() + props.deltaTime;
+  const [ clock, setClock ] = useState(tick(rightDate));
 
   useEffect(() => {
     setTimeout(() => {
-      setClock(tick(new Date));
+      setClock(tick(rightDate));
     }, 100);
   }, [clock]);
 
