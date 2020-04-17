@@ -3,6 +3,10 @@ import {BASE_API_URL} from '../config.js';
 
 const api = axios.create({ baseURL: BASE_API_URL, timeout: 220000 });
 
+export function serverTime() {
+  return api.get('server_time/');
+}
+
 export function getBills() {
   return api.get('requests/');
 }

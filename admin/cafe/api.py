@@ -4,6 +4,8 @@ from .models import Order, Request, Table, Menu
 from rest_framework import routers, serializers, viewsets
 from rest_framework.validators import UniqueValidator
 from rest_framework.permissions import IsAuthenticated
+from cafe.helpers import server_time
+
 
 # Serializers define the API representation.
 class RequestSerializer(serializers.HyperlinkedModelSerializer):
@@ -37,3 +39,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 router = routers.DefaultRouter()
 router.register(r'requests', RequestViewSet)
 router.register(r'orders', OrderViewSet)
+
+api_urls = router.urls + [
+    url(r'^server_time', server_time)
+]
