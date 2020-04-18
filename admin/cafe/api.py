@@ -25,6 +25,16 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
         model = Order
         fields = ('id', 'table', 'start_at', 'end_at', 'paid')
 
+class TableSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Table
+        fields = ('id', 'number', 'label')
+
+class MenuSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Menu
+        fields = ('id', 'item', 'description', 'price', 'available')
+
 # ViewSets define the view behavior.
 class RequestViewSet(viewsets.ModelViewSet):
     queryset = Request.objects.filter(finish=False)
@@ -35,6 +45,16 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
 
+class TableViewSet(viewsets.ModelViewSet):
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer
+    permission_classes = [IsAuthenticated]
+
+class MenuViewSet(viewsets.ModelViewSet):
+    queryset = Menu.objects.filter(available=True)
+    serializer_class = MenuSerializer
+    permission_classes = [IsAuthenticated]
+
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'requests', RequestViewSet)
@@ -43,3 +63,5 @@ router.register(r'orders', OrderViewSet)
 api_urls = router.urls + [
     url(r'^server_time', server_time)
 ]
+router.register(r'tables', TableViewSet)
+router.register(r'menus', MenuViewSet)
