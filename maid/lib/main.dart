@@ -1,5 +1,8 @@
 import 'package:maid/pages/home.page.dart';
 import 'package:maid/pages/login.page.dart';
+import 'package:maid/pages/new_order.page.dart';
+import 'package:maid/pages/new_request.page.dart';
+import 'package:maid/pages/request_review.page.dart';
 import 'package:maid/services/auth.service.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +30,10 @@ void main() async {
     routes: <String, WidgetBuilder>{
       // Set routes for using the Navigator.
       '/home': (BuildContext context) => new HomePage(),
-      '/login': (BuildContext context) => new LoginPage()
+      '/login': (BuildContext context) => new LoginPage(),
+      '/new_order': (BuildContext context) => new OrderPage(),
+      '/new_request': (BuildContext context) => new RequestPage(),
+      '/request_review': (BuildContext context) => new RequestReviewPage(),
     },
   ));
 }

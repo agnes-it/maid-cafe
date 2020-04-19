@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
     ),
     floatingActionButton: FloatingActionButton(
       onPressed: () {
-        Navigator.pushNamed(context, '/new_customer');
+        Navigator.pushNamed(context, '/new_order');
       },
       child: Icon(Icons.add),
       backgroundColor: Colors.red,
