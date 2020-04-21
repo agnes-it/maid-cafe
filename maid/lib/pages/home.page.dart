@@ -1,7 +1,14 @@
-import 'package:maid/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:maid/auth/auth.dart';
 
 class HomePage extends StatelessWidget {
+  final AuthService userRepository;
+
+   HomePage({Key key, @required this.userRepository})
+      : assert(userRepository != null),
+        super(key: key);
+
   @override
   Widget build(BuildContext context) => new Scaffold(
     appBar: new AppBar(
@@ -31,8 +38,10 @@ class HomePage extends StatelessWidget {
           ListTile(
             title: Text('Logout'),
             onTap: () {
-              appAuth.logout().then(
-                  (_) => Navigator.of(context).pushReplacementNamed('/login')
+              userRepository.logout().then(
+                  (_) => {
+                    BlocProvider.of<AuthBloc>(context).add(LoggedOut())
+                  }
               );
               Navigator.pop(context);
             },

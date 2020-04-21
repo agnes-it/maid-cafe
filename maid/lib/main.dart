@@ -1,39 +1,81 @@
+import 'package:flutter/material.dart';
+import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maid/pages/home.page.dart';
-import 'package:maid/pages/login.page.dart';
+import 'package:maid/pages/login/login.page.dart';
 import 'package:maid/pages/new_order.page.dart';
 import 'package:maid/pages/new_request.page.dart';
 import 'package:maid/pages/request_review.page.dart';
-import 'package:maid/services/auth.service.dart';
-import 'package:flutter/material.dart';
+import 'package:maid/pages/splash.page.dart';
+import 'package:maid/auth/auth.dart';
 
-AuthService appAuth = new AuthService();
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Set default home.
-  Widget _defaultHome = new LoginPage();
-
-  // Get result of the login function.
-  bool _result = await appAuth.authenticated();
-  if (_result) {
-    _defaultHome = new HomePage();
+class SimpleBlocDelegate extends BlocDelegate {
+  @override
+  void onEvent(Bloc bloc, Object event) {
+    print(event);
+    super.onEvent(bloc, event);
   }
 
-  // Run app!
-  runApp(new MaterialApp(
-    title: 'Maid Cafe',
-    theme: new ThemeData(
-      primarySwatch: Colors.red
+  @override
+  void onTransition(Bloc bloc, Transition transition) {
+    print(transition);
+    super.onTransition(bloc, transition);
+  }
+
+  @override
+  void onError(Bloc bloc, Object error, StackTrace stackTrace) {
+    print(error);
+    super.onError(bloc, error, stackTrace);
+  }
+}
+
+void main() async {
+  BlocSupervisor.delegate = SimpleBlocDelegate();
+  final userRepository = AuthService();
+  
+  runApp(
+    BlocProvider<AuthBloc>(
+      create: (context) {
+        return AuthBloc(userRepository: userRepository)
+          ..add(AppStarted());
+      },
+      child: App(userRepository: userRepository),
     ),
-    home: _defaultHome,
-    routes: <String, WidgetBuilder>{
-      // Set routes for using the Navigator.
-      '/home': (BuildContext context) => new HomePage(),
-      '/login': (BuildContext context) => new LoginPage(),
-      '/new_order': (BuildContext context) => new OrderPage(),
-      '/new_request': (BuildContext context) => new RequestPage(),
-      '/request_review': (BuildContext context) => new RequestReviewPage(),
-    },
-  ));
+  );
+}
+
+class App extends StatelessWidget {
+  final AuthService userRepository;
+
+  App({Key key, @required this.userRepository}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Maid Cafe',
+      theme: new ThemeData(
+        primarySwatch: Colors.red
+      ),
+      home: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if (state is AuthAuthenticated) {
+            return HomePage(userRepository: userRepository);
+          }
+          if (state is AuthUnauthenticated) {
+            return LoginPage(userRepository: userRepository);
+          }
+          return SplashPage();
+        },
+      ),
+      routes: <String, WidgetBuilder>{
+        // Set routes for using the Navigator.
+        '/home': (BuildContext context) => new HomePage(userRepository: userRepository),
+        '/login': (BuildContext context) => new LoginPage(userRepository: userRepository),
+        '/new_order': (BuildContext context) => new OrderPage(),
+        '/new_request': (BuildContext context) => new RequestPage(),
+        '/request_review': (BuildContext context) => new RequestReviewPage(),
+      },
+    );
+  }
 }
