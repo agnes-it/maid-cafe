@@ -1,5 +1,6 @@
 import 'package:maid/main.dart';
 import 'package:maid/components/flutter_counter.dart';
+import 'package:maid/helpers.dart';
 import 'package:flutter/material.dart';
 
 class RequestPage extends StatefulWidget {
@@ -8,11 +9,10 @@ class RequestPage extends StatefulWidget {
 }
 
 class _RequestPageState extends State<RequestPage> {
-  final List<String> entries = <String>['Sopa Gostosa', 'Hamburgao', 'Pa de coentro'];
+  final List<String> entries = <String>['Sopa Gostosa', 'Hamburgao', 'Pa de coentro', 'Arroz Doce', 'Pao de alho', 'Comida caseira', 'jilo frito'];
   int _defaultValue = 0;
   var _itemsValues = new Map();
-  final _additionalInfoFilter = TextEditingController();
-  String _additionalInfo = "";
+  Map<String,TextEditingController> _additionalInfoFilters = {};
 
   @override
   Widget build(BuildContext context) => new Scaffold(
@@ -41,6 +41,7 @@ class _RequestPageState extends State<RequestPage> {
   );
 
   Widget _buildList(BuildContext context, int index) {
+    String id = strToHash(entries[index]);
     return Column(
       children: [
         new Container(
@@ -54,7 +55,7 @@ class _RequestPageState extends State<RequestPage> {
                 ),
               ),
               Counter(
-                initialValue: _itemsValues[index] ?? 0,
+                initialValue: _itemsValues[id] ?? 0,
                 minValue: 0,
                 maxValue: 10,
                 step: 1,
@@ -63,41 +64,52 @@ class _RequestPageState extends State<RequestPage> {
                 onChanged: (value) {
                   setState(() {
                     _defaultValue = value;
-                    _itemsValues[index] = value;
-                    _updateFieldControllers();
+                    _itemsValues[id] = value;
+                    _updateFieldControllers(id);
                   });
                 },
               ),
             ],
           )
         ),
-        _buildAdditionalInfo(_itemsValues[index])
+        ..._buildAdditionalInfo(_itemsValues[id], entries[index])
       ]
     );
   }
 
-  Widget _buildAdditionalInfo(amount) {
+  _buildAdditionalInfo(amount, menuName) {
     int amountValue = amount ?? 0;
-    print(amountValue);
+    String id = '${menuName}';
     if (amountValue > 0) {
-      return new Container(
-        child: new TextField(
-          controller: _additionalInfoFilter,
-          decoration: new InputDecoration(
-            labelText: 'additional info',
-            contentPadding: const EdgeInsets.all(10.0),
-            filled: true,
-            fillColor: Colors.grey[200],
-            prefixIcon: Icon(Icons.announcement),
-          ),
-        ),
+      return List<Widget>.generate(
+        amountValue,
+        (i) => TextField(
+            controller: _additionalInfoFilters[id],
+            decoration: new InputDecoration(
+              labelText: '${i + 1} additional info',
+              contentPadding: const EdgeInsets.all(10.0),
+              filled: true,
+              fillColor: Colors.grey[200],
+              prefixIcon: Icon(Icons.announcement),
+            ),
+          )
       );
     } else {
-      return new Container();
+      return [];
     }
   }
 
-  void _updateFieldControllers() {
-    print(_itemsValues.length);
+  void generateControllers(item, index) {
+    int amount = _itemsValues[item];
+    for (var i = 0; i <= amount; i += 1) {
+      String id = '${item}${i.toString()}';
+      if (_additionalInfoFilters[id] == null) {
+        _additionalInfoFilters[id] = new TextEditingController();
+      }
+    }
+  }
+
+  void _updateFieldControllers(id) {
+    _itemsValues.forEach(generateControllers);
   }
 }
