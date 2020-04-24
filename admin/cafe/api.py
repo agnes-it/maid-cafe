@@ -12,18 +12,22 @@ class RequestSerializer(serializers.HyperlinkedModelSerializer):
     maid = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field="username")
     table = serializers.SlugRelatedField(queryset=Table.objects.all(), slug_field="label")
     menu = serializers.SlugRelatedField(queryset=Menu.objects.all(), many=True, slug_field="item")
+    order = serializers.SlugRelatedField(queryset=Order.objects.all(), slug_field="id", write_only=True)
 
     class Meta:
         model = Request
-        fields = ('id', 'maid', 'client', 'table',
+        fields = ('id', 'maid', 'client', 'table', 'order',
                   'start_at', 'end_at', 'menu', 'finish', 'additional_info')
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     table = serializers.SlugRelatedField(queryset=Table.objects.all(), slug_field="label")
-    
+
     class Meta:
         model = Order
-        fields = ('id', 'table', 'start_at', 'end_at', 'paid')
+        fields = ('id', 'table', 'client', 'start_at', 'requests', 'end_at', 'paid')
+        extra_kwargs = {
+            'requests': {'read_only': True}
+        }
 
 class TableSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -46,7 +50,8 @@ class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 class TableViewSet(viewsets.ModelViewSet):
-    queryset = Table.objects.all()
+    current_orders = Order.objects.filter(paid=False).values_list('table__id', flat=True)
+    queryset = Table.objects.exclude(pk__in=current_orders)
     serializer_class = TableSerializer
     permission_classes = [IsAuthenticated]
 
@@ -59,9 +64,9 @@ class MenuViewSet(viewsets.ModelViewSet):
 router = routers.DefaultRouter()
 router.register(r'requests', RequestViewSet)
 router.register(r'orders', OrderViewSet)
+router.register(r'tables', TableViewSet)
+router.register(r'menus', MenuViewSet)
 
 api_urls = router.urls + [
     url(r'^server_time', server_time)
 ]
-router.register(r'tables', TableViewSet)
-router.register(r'menus', MenuViewSet)

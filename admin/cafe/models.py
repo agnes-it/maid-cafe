@@ -43,7 +43,11 @@ class Request(models.Model):
     maid = models.ForeignKey(User)
     client = models.CharField(max_length=255)
     table = models.ForeignKey(Table)
-    order = models.ForeignKey(Order)
+    order = models.ForeignKey(
+        Order,
+        related_name="requests",
+        related_query_name="request",
+    )
     start_at = models.DateTimeField(auto_now_add=True)
     end_at = models.DateTimeField(blank=True, null=True)
     menu = models.ManyToManyField(Menu)
