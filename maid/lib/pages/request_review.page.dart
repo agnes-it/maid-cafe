@@ -1,4 +1,3 @@
-import 'package:maid/main.dart';
 import 'package:flutter/material.dart';
 
 class RequestReviewPage extends StatelessWidget {

@@ -1,47 +1,60 @@
-import 'package:maid/main.dart';
-import 'package:maid/components/flutter_counter.dart';
-import 'package:maid/helpers.dart';
 import 'package:flutter/material.dart';
 
-class RequestPage extends StatefulWidget {
+import 'package:maid/components/flutter_counter.dart';
+import 'package:maid/helpers.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:maid/pages/request/bloc/menu.bloc.dart';
+import 'package:maid/pages/request/models/menu.dart';
+
+class RequestForm extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new _RequestPageState();
 }
 
-class _RequestPageState extends State<RequestPage> {
-  final List<String> entries = <String>['Sopa Gostosa', 'Hamburgao', 'Pa de coentro', 'Arroz Doce', 'Pao de alho', 'Comida caseira', 'jilo frito'];
-  int _defaultValue = 0;
+class _RequestPageState extends State<RequestForm> {
+  List<Menu> entries = [];
+  int _defaultValue;
   var _itemsValues = new Map();
   Map<String,TextEditingController> _additionalInfoFilters = {};
 
   @override
-  Widget build(BuildContext context) => new Scaffold(
-    appBar: new AppBar(
-      title: new Text('New Request'),
-    ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        Navigator.pushNamed(context, '/request_review');
+  Widget build(BuildContext context) {
+    return BlocListener<MenuBloc, MenuState>(
+      listener: (context, state) {
+        if (state is MenuLoaded) {
+          entries = state.menus;
+        }
+
+        if (state is MenuError) {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${state.error}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       },
-      child: Icon(Icons.send),
-      backgroundColor: Colors.red,
-    ),
-    body: new Container(
-      alignment: Alignment.center,
-      child: ListView.separated(
-        padding: const EdgeInsets.all(8),
-        itemCount: entries.length,
-        itemBuilder: (BuildContext context, int index) => _buildList(context, index),
-        separatorBuilder: (BuildContext context, int index) => new Divider(
-          height: 50.0,
-          color: Colors.grey[400],
-        ),
+      child: BlocBuilder<MenuBloc, MenuState>(
+        builder: (context, state) {
+          return new Container(
+            alignment: Alignment.center,
+            child: ListView.separated(
+              padding: const EdgeInsets.all(8),
+              itemCount: entries.length,
+              itemBuilder: (BuildContext context, int index) => _buildList(context, index),
+              separatorBuilder: (BuildContext context, int index) => new Divider(
+                height: 50.0,
+                color: Colors.grey[400],
+              ),
+            ),
+          );
+        },
       ),
-    ),
-  );
+    );
+  }
 
   Widget _buildList(BuildContext context, int index) {
-    String id = strToHash(entries[index]);
+    String id = strToHash(entries[index].item);
     return Column(
       children: [
         new Container(
@@ -59,7 +72,7 @@ class _RequestPageState extends State<RequestPage> {
                 minValue: 0,
                 maxValue: 10,
                 step: 1,
-                herotag: '${index}',
+                herotag: '$index',
                 decimalPlaces: 0,
                 onChanged: (value) {
                   setState(() {
@@ -79,7 +92,7 @@ class _RequestPageState extends State<RequestPage> {
 
   _buildAdditionalInfo(amount, menuName) {
     int amountValue = amount ?? 0;
-    String id = '${menuName}';
+    String id = '$menuName';
     if (amountValue > 0) {
       return List<Widget>.generate(
         amountValue,
@@ -102,7 +115,7 @@ class _RequestPageState extends State<RequestPage> {
   void generateControllers(item, index) {
     int amount = _itemsValues[item];
     for (var i = 0; i <= amount; i += 1) {
-      String id = '${item}${i.toString()}';
+      String id = '$item${i.toString()}';
       if (_additionalInfoFilters[id] == null) {
         _additionalInfoFilters[id] = new TextEditingController();
       }
