@@ -13,7 +13,6 @@ class RequestForm extends StatefulWidget {
 
 class _RequestPageState extends State<RequestForm> {
   List<Menu> entries = [];
-  int _defaultValue;
   var _itemsValues = new Map();
   Map<String,TextEditingController> _additionalInfoFilters = {};
 
@@ -63,7 +62,7 @@ class _RequestPageState extends State<RequestForm> {
             children: [
               Expanded(
                 child: Text(
-                  '${entries[index]}',
+                  '${entries[index].item}',
                   style: TextStyle(fontSize: 20),
                 ),
               ),
@@ -76,7 +75,6 @@ class _RequestPageState extends State<RequestForm> {
                 decimalPlaces: 0,
                 onChanged: (value) {
                   setState(() {
-                    _defaultValue = value;
                     _itemsValues[id] = value;
                     _updateFieldControllers(id);
                   });
