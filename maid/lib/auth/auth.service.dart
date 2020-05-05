@@ -13,6 +13,18 @@ class AuthIOException implements Exception {
    String errMsg() => 'Something went wrong, please try again and communicate our support'; 
 }
 
+class AuthenticatedClient extends http.BaseClient {
+  final String token;
+  final http.Client _inner;
+
+  AuthenticatedClient(this.token, this._inner);
+
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    request.headers['authorization'] = "Token $token";
+    return _inner.send(request);
+  }
+}
+
 class AuthService {
   Future<String> authenticate(String username, String password) async {
     final url = 'http://10.0.2.2:8000/api-token-auth/';

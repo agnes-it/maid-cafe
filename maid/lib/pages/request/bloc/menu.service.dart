@@ -2,18 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:maid/pages/request/models/menu.dart';
+import 'package:maid/auth/auth.service.dart';
 
-class AuthenticatedClient extends http.BaseClient {
-  final String token;
-  final http.Client _inner;
-
-  AuthenticatedClient(this.token, this._inner);
-
-  Future<http.StreamedResponse> send(http.BaseRequest request) {
-    request.headers['authorization'] = "Token $token";
-    return _inner.send(request);
-  }
-}
 
 class AuthException implements Exception { 
    String errMsg() => 'Error checking your permissions, please try to log in again.'; 
