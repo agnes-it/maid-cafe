@@ -51,7 +51,7 @@ class Request(models.Model):
     )
     start_at = models.DateTimeField(auto_now_add=True)
     end_at = models.DateTimeField(blank=True, null=True)
-    menu = models.ManyToManyField(Menu)
+    menus = models.ManyToManyField(Menu, through="RequestMenu")
     finish = models.BooleanField(default=False)
     additional_info = models.TextField(blank=True, null=True)
 
@@ -60,3 +60,8 @@ class Request(models.Model):
 
     def __unicode__(self):
         return "{customer} - {table} [{start}]".format(customer=self.client, table=self.table.label, start=self.start_at)
+
+class RequestMenu(models.Model):
+    request = models.ForeignKey(Request)
+    menu = models.ForeignKey(Menu)
+    amount = models.IntegerField()
