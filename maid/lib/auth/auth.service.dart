@@ -52,6 +52,18 @@ class AuthService {
     return token?.isNotEmpty ?? false;
   }
 
+  Future<void> persistUsername(String username) async {
+    await storage.write(key: 'username', value: username);
+  }
+
+  Future<String> getUsername() async {
+    return await storage.read(key: 'username');
+  }
+
+  Future<void> deleteUsername() async {
+    await storage.delete(key: 'username');
+  }
+
   Future<void> persistToken(String token) async {
     await storage.write(key: 'token', value: token);
   }
