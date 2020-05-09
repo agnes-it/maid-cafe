@@ -44,6 +44,29 @@ class RequestMenuUpdated extends RequestState {
       'RequestMenuUpdated { menu: ${requestMenu.menu}, amount: ${requestMenu.amount} }';
 }
 
+class RequestAdditionalInfoUpdated extends RequestState {
+  final Request request;
+
+  const RequestAdditionalInfoUpdated({
+    this.request
+  });
+
+  RequestAdditionalInfoUpdated copyWith({
+    Request request
+  }) {
+    return RequestAdditionalInfoUpdated(
+      request: request ?? this.request
+    );
+  }
+
+  @override
+  List<Object> get props => [request];
+
+  @override
+  String toString() =>
+      'RequestAdditionalInfoUpdated { id: ${request.id}, maid: ${request.maid}, order: ${request.order}, table: ${request.table} }';
+}
+
 class RequestLoaded extends RequestState {
   final Request request;
 

@@ -27,6 +27,11 @@ class RequestService {
     return request;
   }
 
+  Request updateAdditionalInfo(String additionalInfo) {
+    request.info = additionalInfo;
+    return request;
+  }
+
   RequestMenu requestMenu(int menu, int amount) {
     request.menus.removeWhere((requestMenu) => requestMenu.menu == menu);
     if (amount == 0) {

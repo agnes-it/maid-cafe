@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:maid/components/flutter_counter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +8,7 @@ import 'package:maid/pages/request/bloc/menu.service.dart';
 import 'package:maid/pages/request/models/menu.dart';
 import 'package:maid/pages/request/models/request_menu.dart';
 import 'package:maid/pages/request/bloc/request.bloc.dart';
+import 'package:maid/debouncer.dart';
 
 class RequestMenuInput extends StatefulWidget {
   final MenuService menuRepository;
@@ -22,7 +25,8 @@ class RequestMenuInput extends StatefulWidget {
 
 class _RequestMenuState extends State<RequestMenuInput> {
   RequestMenu requestMenu;
-  Map<int, TextEditingController> _additionalInfoFilters = {};
+  Map<String, TextEditingController> _additionalInfoFilters = {};
+  Timer _debounce;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +64,7 @@ class _RequestMenuState extends State<RequestMenuInput> {
                       onChanged: (value) {
                         setState(() {
                           BlocProvider.of<RequestBloc>(context).add(UpdateRequestMenu(menu: widget.menu.id, amount: value));
-                          _updateFieldControllers(widget.menu.id, value);
+                          _updateFieldControllers(widget.menu.id, value, context);
                         });
                       },
                     ),
@@ -75,13 +79,21 @@ class _RequestMenuState extends State<RequestMenuInput> {
     );
   }
 
-  _buildAdditionalInfo(menuName, amountValue) {
-    String id = '$menuName';
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    _additionalInfoFilters.forEach((index, controller) => controller.dispose());
+    _debounce.cancel();
+    super.dispose();
+  }
+
+  _buildAdditionalInfo(int id, int amountValue) {
     if (amountValue > 0) {
       return List<Widget>.generate(
         amountValue,
         (i) => TextField(
-            controller: _additionalInfoFilters[id],
+            controller: _additionalInfoFilters["$id-$i"],
             decoration: new InputDecoration(
               labelText: '${i + 1} additional info',
               contentPadding: const EdgeInsets.all(10.0),
@@ -96,11 +108,24 @@ class _RequestMenuState extends State<RequestMenuInput> {
     }
   }
 
-  void _updateFieldControllers(id, amount) {
+  void _updateFieldControllers(int id, int amount, BuildContext context) {
     for (var i = 0; i <= amount; i += 1) {
-      if (_additionalInfoFilters[id] == null) {
-        _additionalInfoFilters[id] = new TextEditingController();
+      String key = "$id-$i";
+      if (_additionalInfoFilters[key] == null) {
+        _additionalInfoFilters[key] = TextEditingController();
+        _additionalInfoFilters[key].addListener(submitAdditionalInfo(context));
       }
     }
+  }
+
+  submitAdditionalInfo(BuildContext context) {
+    return () {
+      if (_debounce?.isActive ?? false) _debounce.cancel();
+      _debounce = Timer(const Duration(milliseconds: 500), () {
+          BlocProvider.of<RequestBloc>(context).add(UpdateAdditionalInfo(
+            additionalInfo: _additionalInfoFilters.values.fold('', (prev, element) => '$prev\n${element.text}')
+          ));
+      });
+    };
   }
 }

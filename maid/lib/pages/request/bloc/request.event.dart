@@ -16,6 +16,14 @@ class UpdateRequestMenu extends RequestEvent {
               amount != null);
 }
 
+class UpdateAdditionalInfo extends RequestEvent {
+  final String additionalInfo;
+  
+  UpdateAdditionalInfo({
+    @required this.additionalInfo,
+  })  : assert(additionalInfo != null);
+}
+
 class New extends RequestEvent {
   final int order;
   final String table;
