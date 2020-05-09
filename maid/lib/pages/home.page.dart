@@ -82,7 +82,7 @@ class HomePage extends StatelessWidget {
                   children: <Widget>[
                     Image(image: AssetImage('images/table-icon.png'), width: 75, height: 75),
                     Text(
-                      'Mesa $index',
+                      'Mesa ${index+1}',
                       style: Theme.of(context).textTheme.headline,
                     ),
                   ]
