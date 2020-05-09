@@ -66,9 +66,27 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
           yield RequestError(error: "Cannot update request menu without creating a request");
           return;
         }
-        if (currentState is RequestLoaded || currentState is RequestMenuUpdated) {
+        if (currentState is RequestLoaded || currentState is RequestMenuUpdated || currentState is RequestAdditionalInfoUpdated) {
           final requestMenu = requestRepository.requestMenu(event.menu, event.amount);
+          requestRepository.persistRequest(requestRepository.request);
           yield RequestMenuUpdated(requestMenu: requestMenu);
+          return;
+        }
+      } catch (error) {
+        yield RequestError(error: error.toString());
+      }
+    }
+
+    if (event is UpdateAdditionalInfo) {
+      try {
+        if (currentState is RequestUninitialized) {
+          yield RequestError(error: "Cannot update request menu without creating a request");
+          return;
+        }
+        if (currentState is RequestMenuUpdated || currentState is RequestAdditionalInfoUpdated) {
+          final request = requestRepository.updateAdditionalInfo(event.additionalInfo);
+          requestRepository.persistRequest(request);
+          yield RequestAdditionalInfoUpdated(request: request);
           return;
         }
       } catch (error) {

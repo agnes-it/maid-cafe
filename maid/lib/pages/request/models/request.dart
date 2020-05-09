@@ -8,15 +8,23 @@ class Request extends Equatable {
   final String maid;
   final String table;
   final List<RequestMenu> menus;
-  final String additionalInfo;
+  String additionalInfo;
 
-  const Request({this.id, this.maid, this.table, this.menus, this.order, this.additionalInfo});
+  String get info {
+    return additionalInfo;
+  }
+
+  void set info(String _additionalInfo) {
+    additionalInfo = _additionalInfo;
+  }
+
+  Request({this.id, this.maid, this.table, this.menus, this.order, this.additionalInfo});
 
   @override
   List<Object> get props => [id, maid, table, menus, order, additionalInfo];
 
   @override
-  String toString() => 'Menu { id: $id }';
+  String toString() => 'Request { id: $id, order: $order }';
 
   Request.fromJson(Map<String, dynamic> json)
       : id = json['id'],
