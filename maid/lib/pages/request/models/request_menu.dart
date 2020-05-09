@@ -11,4 +11,14 @@ class RequestMenu extends Equatable {
 
   @override
   String toString() => 'RequestMenu { menu: $menu, amount: $amount }';
+
+  RequestMenu.fromJson(Map<String, dynamic> json)
+      : menu = json['menu'],
+        amount = json['amount'];
+
+  Map<String, dynamic> toJson() =>
+    {
+      'menu': menu,
+      'amount': amount,
+    };
 }

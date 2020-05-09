@@ -1,27 +1,42 @@
 import 'package:flutter/material.dart';
 
-import 'package:maid/components/flutter_counter.dart';
 import 'package:maid/helpers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maid/pages/request/bloc/menu.bloc.dart';
+import 'package:maid/pages/request/bloc/request.bloc.dart';
+import 'package:maid/auth/auth.service.dart';
+import 'package:maid/pages/request/bloc/menu.service.dart';
+import 'package:maid/pages/request/bloc/request.service.dart';
 import 'package:maid/pages/request/models/menu.dart';
+import 'package:maid/pages/request/models/request_menu.dart';
+import 'package:maid/pages/request/request_menu.component.dart';
 
 class RequestForm extends StatefulWidget {
+  final MenuService menuRepository;
+  final AuthService userRepository;
+  final RequestService requestRepository;
+
+  RequestForm({Key key, @required this.requestRepository, @required this.menuRepository, @required this.userRepository})
+      : assert(menuRepository != null, userRepository != null),
+        super(key: key);
+
   @override
   State<StatefulWidget> createState() => new _RequestPageState();
 }
 
 class _RequestPageState extends State<RequestForm> {
   List<Menu> entries = [];
-  var _itemsValues = new Map();
-  Map<String,TextEditingController> _additionalInfoFilters = {};
+  RequestBloc _requestBloc;
 
   @override
   Widget build(BuildContext context) {
+    _requestBloc = BlocProvider.of<RequestBloc>(context);
     return BlocListener<MenuBloc, MenuState>(
       listener: (context, state) {
         if (state is MenuLoaded) {
           entries = state.menus;
+          // @TODO: order is hardcoded
+          _requestBloc.add(New(order: 1, table: "Table 1"));
         }
 
         if (state is MenuError) {
@@ -53,74 +68,18 @@ class _RequestPageState extends State<RequestForm> {
   }
 
   Widget _buildList(BuildContext context, int index) {
-    String id = strToHash(entries[index].item);
-    return Column(
-      children: [
-        new Container(
-          height: 70.0,
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  '${entries[index].item}',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-              Counter(
-                initialValue: _itemsValues[id] ?? 0,
-                minValue: 0,
-                maxValue: 10,
-                step: 1,
-                herotag: '$index',
-                decimalPlaces: 0,
-                onChanged: (value) {
-                  setState(() {
-                    _itemsValues[id] = value;
-                    _updateFieldControllers(id);
-                  });
-                },
-              ),
-            ],
-          )
-        ),
-        ..._buildAdditionalInfo(_itemsValues[id], entries[index])
-      ]
+    return BlocProvider(
+      create: (context) => RequestBloc(
+        menuRepository: widget.menuRepository,
+        userRepository: widget.userRepository,
+        requestRepository: widget.requestRepository
+      // @TODO: order is hardcoded
+      )..add(New(order: 1, table: "Table 1")),
+      child: RequestMenuInput(
+        menu: entries[index],
+        menuRepository: widget.menuRepository,
+        userRepository: widget.userRepository,
+      )
     );
-  }
-
-  _buildAdditionalInfo(amount, menuName) {
-    int amountValue = amount ?? 0;
-    String id = '$menuName';
-    if (amountValue > 0) {
-      return List<Widget>.generate(
-        amountValue,
-        (i) => TextField(
-            controller: _additionalInfoFilters[id],
-            decoration: new InputDecoration(
-              labelText: '${i + 1} additional info',
-              contentPadding: const EdgeInsets.all(10.0),
-              filled: true,
-              fillColor: Colors.grey[200],
-              prefixIcon: Icon(Icons.announcement),
-            ),
-          )
-      );
-    } else {
-      return [];
-    }
-  }
-
-  void generateControllers(item, index) {
-    int amount = _itemsValues[item];
-    for (var i = 0; i <= amount; i += 1) {
-      String id = '$item${i.toString()}';
-      if (_additionalInfoFilters[id] == null) {
-        _additionalInfoFilters[id] = new TextEditingController();
-      }
-    }
-  }
-
-  void _updateFieldControllers(id) {
-    _itemsValues.forEach(generateControllers);
-  }
+  } 
 }

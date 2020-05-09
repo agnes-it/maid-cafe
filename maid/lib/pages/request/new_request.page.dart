@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maid/auth/auth.service.dart';
-import 'package:maid/pages/request/bloc/menu.bloc.dart';
 import 'package:maid/pages/request/bloc/menu.service.dart';
-//import 'package:maid/pages/request/bloc/request.dart';
+import 'package:maid/pages/request/bloc/request.service.dart';
+import 'package:maid/pages/request/bloc/menu.bloc.dart';
+import 'package:maid/pages/request/bloc/request.bloc.dart';
 import 'package:maid/pages/request/new_request.form.dart';
 
 
 class RequestPage extends StatelessWidget {
   final MenuService menuRepository;
   final AuthService userRepository;
+  final requestRepository = RequestService();
 
   RequestPage({Key key, @required this.menuRepository, @required this.userRepository})
       : assert(menuRepository != null, userRepository != null),
@@ -31,11 +33,21 @@ class RequestPage extends StatelessWidget {
       body: BlocProvider(
         create: (context) =>
           MenuBloc(
-            //requestBloc: BlocProvider.of<RequestBloc>(context),
             menuRepository: menuRepository,
             userRepository: userRepository,
           )..add(Fetch()),
-        child: RequestForm(),
+        child: BlocProvider(
+          create: (context) => RequestBloc(
+            menuRepository: menuRepository,
+            userRepository: userRepository,
+            requestRepository: requestRepository
+          ),
+          child: RequestForm(
+            menuRepository: menuRepository,
+            userRepository: userRepository,
+            requestRepository: requestRepository,
+          ),
+        ),
       ),
     );
   }
