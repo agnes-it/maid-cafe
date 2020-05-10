@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:maid/pages/home.page.dart';
+import 'package:maid/pages/order/home.page.dart';
 import 'package:maid/pages/login/login.page.dart';
 import 'package:maid/pages/new_order.page.dart';
 import 'package:maid/pages/request/new_request.page.dart';
 import 'package:maid/pages/request_review.page.dart';
 import 'package:maid/pages/splash.page.dart';
 import 'package:maid/auth/auth.dart';
+import 'package:maid/pages/order/bloc/order.service.dart';
 import 'package:maid/pages/request/bloc/menu.service.dart';
 
 
@@ -34,7 +35,6 @@ class SimpleBlocDelegate extends BlocDelegate {
 void main() async {
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final userRepository = AuthService();
-  final menuRepository = MenuService();
   
   runApp(
     BlocProvider<AuthBloc>(
@@ -42,16 +42,17 @@ void main() async {
         return AuthBloc(userRepository: userRepository)
           ..add(AppStarted());
       },
-      child: App(userRepository: userRepository, menuRepository: menuRepository),
+      child: App(userRepository: userRepository),
     ),
   );
 }
 
 class App extends StatelessWidget {
   final AuthService userRepository;
-  final MenuService menuRepository;
+  final MenuService menuRepository = MenuService();
+  final orderRepository = OrderService();
 
-  App({Key key, @required this.userRepository, @required this.menuRepository}) : super(key: key);
+  App({Key key, @required this.userRepository}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,7 @@ class App extends StatelessWidget {
       home: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           if (state is AuthAuthenticated) {
-            return HomePage(userRepository: userRepository);
+            return HomePage(userRepository: userRepository, orderRepository: orderRepository);
           }
           if (state is AuthUnauthenticated) {
             return LoginPage(userRepository: userRepository);
@@ -73,7 +74,7 @@ class App extends StatelessWidget {
       ),
       routes: <String, WidgetBuilder>{
         // Set routes for using the Navigator.
-        '/home': (BuildContext context) => new HomePage(userRepository: userRepository),
+        '/home': (BuildContext context) => new HomePage(userRepository: userRepository, orderRepository: orderRepository),
         '/login': (BuildContext context) => new LoginPage(userRepository: userRepository),
         '/new_order': (BuildContext context) => new OrderPage(),
         '/new_request': (BuildContext context) => new RequestPage(userRepository: userRepository, menuRepository: menuRepository),
