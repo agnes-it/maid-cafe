@@ -116,6 +116,10 @@ class HomePage extends StatelessWidget {
                 order.table,
                 style: Theme.of(context).textTheme.headline,
               ),
+              Text(
+                "Customer: ${order.client}",
+                style: Theme.of(context).textTheme.subtitle,
+              ),
             ]
           ),
         ),
