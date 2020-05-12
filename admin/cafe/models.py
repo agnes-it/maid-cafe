@@ -28,7 +28,7 @@ class Menu(models.Model):
 
 class Order(models.Model):
     client = models.CharField(max_length=255)
-    table = models.ForeignKey(Table)
+    table = models.ForeignKey(Table, on_delete=models.PROTECT)
     paid = models.BooleanField(default=False)
     start_at = models.DateTimeField(auto_now_add=True)
     end_at = models.DateTimeField(blank=True, null=True)
@@ -40,13 +40,14 @@ class Order(models.Model):
         return "{customer} - {table} [{start}]".format(customer=self.client, table=self.table.label, start=self.start_at)
 
 class Request(models.Model):
-    maid = models.ForeignKey(User)
+    maid = models.ForeignKey(User, on_delete=models.PROTECT)
     client = models.CharField(max_length=255)
-    table = models.ForeignKey(Table)
+    table = models.ForeignKey(Table, on_delete=models.PROTECT)
     order = models.ForeignKey(
         Order,
         related_name="requests",
         related_query_name="request",
+        on_delete=models.PROTECT,
     )
     start_at = models.DateTimeField(auto_now_add=True)
     end_at = models.DateTimeField(blank=True, null=True)

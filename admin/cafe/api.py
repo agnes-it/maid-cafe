@@ -1,4 +1,4 @@
-from django.conf.urls import url, include
+from django.urls import path, include
 from django.contrib.auth.models import User
 from .models import Order, Request, Table, Menu
 from rest_framework import routers, serializers, viewsets
@@ -68,5 +68,5 @@ router.register(r'tables', TableViewSet)
 router.register(r'menus', MenuViewSet)
 
 api_urls = router.urls + [
-    url(r'^server_time', server_time)
+    path('server_time', server_time)
 ]

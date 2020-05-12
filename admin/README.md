@@ -13,25 +13,19 @@ $ docker-compose up
 
 # Installation
 
-Create virtualenv:
+Create Pipenv env:
 
 ```
-virtualenv -p /usr/bin/python3 venv
-```
-
-Activate virtualenv:
-
-```
-source venv/bin/activate
-```
-
-Install dependencies:
-
-```
-pip install -r requirements.txt
+pipenv install
 ```
 
 * development
+
+Activate env:
+
+```
+pipenv shell
+```
 
 Execute migrations:
 
