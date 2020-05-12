@@ -31,7 +31,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     if (event is Fetch) {
       try {
         final token = await userRepository.getToken();
-        if (currentState is OrderUninitialized) {
+        if (currentState is OrderCreated || currentState is OrderUninitialized) {
           final orders = await orderRepository.list(token);
           yield OrderLoaded(orders: orders);
           return;
@@ -44,6 +44,17 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
                   orders: orders,
                 );
         }
+      } catch (error) {
+        yield OrderError(error: error.toString());
+      }
+    }
+
+    if (event is Create) {
+      try {
+        final token = await userRepository.getToken();
+        final order = await orderRepository.create(token, Order(client: event.customer, table: event.table));
+        yield OrderCreated(order: order);
+        return;
       } catch (error) {
         yield OrderError(error: error.toString());
       }

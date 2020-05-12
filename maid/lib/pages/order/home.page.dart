@@ -56,10 +56,7 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.red,
     ),
     body: BlocProvider(
-      create: (context) => OrderBloc(
-            orderRepository: orderRepository,
-            userRepository: userRepository,
-          )..add(Fetch()),
+      create: (context) => BlocProvider.of<OrderBloc>(context),
       child: BlocListener<OrderBloc, OrderState>(
         listener: (context, state) {
           if (state is OrderLoaded) {
@@ -77,6 +74,9 @@ class HomePage extends StatelessWidget {
         },
         child: BlocBuilder<OrderBloc, OrderState>(
           builder: (context, state) {
+            if (state is OrderLoaded) {
+              entries = state.orders;
+            }
             return new Container(
               alignment: Alignment.center,
               child: GridView.count(

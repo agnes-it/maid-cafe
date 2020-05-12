@@ -43,3 +43,28 @@ class OrderLoaded extends OrderState {
   String toString() =>
       'OrderLoaded { orders: ${orders.length} }';
 }
+
+class OrderCreated extends OrderState {
+  final Order order;
+
+  const OrderCreated({
+    this.order
+  });
+
+  OrderCreated copyWith({
+    Order order
+  }) {
+    return OrderCreated(
+      order: order ?? this.order
+    );
+  }
+
+  @override
+  List<Object> get props => [order];
+
+  @override
+  String toString() =>
+      'OrderCreated { order: ${order.id} }';
+}
+
+class OrderLoading extends OrderState {}

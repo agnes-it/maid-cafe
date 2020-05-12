@@ -9,6 +9,7 @@ import 'package:maid/pages/request_review.page.dart';
 import 'package:maid/pages/splash.page.dart';
 import 'package:maid/auth/auth.dart';
 import 'package:maid/pages/order/bloc/order.service.dart';
+import 'package:maid/pages/order/bloc/order.bloc.dart';
 import 'package:maid/pages/request/bloc/menu.service.dart';
 
 
@@ -35,14 +36,24 @@ class SimpleBlocDelegate extends BlocDelegate {
 void main() async {
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final userRepository = AuthService();
-  
-  runApp(
-    BlocProvider<AuthBloc>(
+  final orderRepository = OrderService();
+
+  final withAuth = BlocProvider<AuthBloc>(
       create: (context) {
         return AuthBloc(userRepository: userRepository)
           ..add(AppStarted());
       },
       child: App(userRepository: userRepository),
+    );
+
+  
+  runApp(
+    BlocProvider<OrderBloc>(
+      create: (context) => OrderBloc(
+            orderRepository: orderRepository,
+            userRepository: userRepository,
+          )..add(Fetch()),
+      child: withAuth,
     ),
   );
 }
@@ -76,7 +87,7 @@ class App extends StatelessWidget {
         // Set routes for using the Navigator.
         '/home': (BuildContext context) => new HomePage(userRepository: userRepository, orderRepository: orderRepository),
         '/login': (BuildContext context) => new LoginPage(userRepository: userRepository),
-        '/new_order': (BuildContext context) => new OrderPage(),
+        '/new_order': (BuildContext context) => new OrderPage(userRepository: userRepository, orderRepository: orderRepository),
         '/new_request': (BuildContext context) => new RequestPage(userRepository: userRepository, menuRepository: menuRepository),
         '/request_review': (BuildContext context) => new RequestReviewPage(),
       },

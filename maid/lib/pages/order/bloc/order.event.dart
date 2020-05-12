@@ -7,4 +7,13 @@ abstract class OrderEvent extends Equatable {
 
 class Fetch extends OrderEvent {}
 
-class Create extends OrderEvent {}
+class Create extends OrderEvent {
+  final String customer;
+  final String table;
+  
+  Create({
+    this.customer,
+    @required this.table,
+  })  : assert(
+              table != null);
+}
