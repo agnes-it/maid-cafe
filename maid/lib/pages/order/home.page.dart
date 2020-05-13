@@ -5,6 +5,7 @@ import 'package:maid/pages/order/models/order.dart';
 import 'package:maid/pages/order/bloc/order.service.dart';
 import 'package:maid/pages/order/bloc/order.bloc.dart';
 import 'package:maid/auth/auth.dart';
+import 'package:maid/pages/request/request.arguments.dart';
 
 class HomePage extends StatelessWidget {
   final AuthService userRepository;
@@ -94,7 +95,10 @@ class HomePage extends StatelessWidget {
   Widget _buildList(BuildContext context, Order order, int index) {
     return new GestureDetector(
       onTap: (){
-        print("Container clicked");
+        Navigator.of(context).pushNamed('/new_request', arguments: RequestArguments(
+          order.id,
+          order.table,
+        ));
       },
       child: Container(
         decoration: const BoxDecoration(
