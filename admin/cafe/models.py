@@ -62,6 +62,6 @@ class Request(models.Model):
         return "{customer} - {table} [{start}]".format(customer=self.client, table=self.table.label, start=self.start_at)
 
 class RequestMenu(models.Model):
-    request = models.ForeignKey(Request)
-    menu = models.ForeignKey(Menu)
+    request = models.ForeignKey(Request, on_delete=models.PROTECT)
+    menu = models.ForeignKey(Menu, on_delete=models.PROTECT)
     amount = models.IntegerField()
