@@ -34,3 +34,14 @@ class New extends RequestEvent {
   })  : assert(
               order != null);
 }
+
+class Create extends RequestEvent {
+  final int order;
+  final String table;
+  
+  Create({
+    @required this.order,
+    @required this.table,
+  })  : assert(
+              order != null);
+}

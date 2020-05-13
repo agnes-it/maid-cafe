@@ -27,7 +27,10 @@ class RequestPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/request_review');
+          Navigator.pushNamed(context, '/request_review', arguments: RequestArguments(
+            args.orderId,
+            args.tableName,
+          ));
         },
         child: Icon(Icons.send),
         backgroundColor: Colors.red,

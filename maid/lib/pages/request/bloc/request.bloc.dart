@@ -32,9 +32,10 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   @override
   Stream<RequestState> mapEventToState(RequestEvent event) async* {
     final currentState = state;
+    final String maid = await userRepository.getUsername();
+
     if (event is New) {
       try {
-        final String maid = await userRepository.getUsername();
         if (currentState is RequestUninitialized) {
           Request request;
           if (await requestRepository.hasRequest(event.order)) {
@@ -53,6 +54,27 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
             request = requestRepository.of(maid, event.order, event.table, []);
           }
           yield RequestLoaded(request: request);
+          return;
+        }
+      } catch (error) {
+        yield RequestError(error: error.toString());
+      }
+    }
+
+    if (event is Create) {
+      try {
+        if (currentState is RequestLoaded) {
+          Request request;
+          if (await requestRepository.hasRequest(event.order)) {
+            request = await requestRepository.getRequest(event.order);
+          } else {
+            yield RequestError(error: "Cannot find request in storage");
+            return;
+          }
+          final String token = await userRepository.getToken();
+          request = await requestRepository.create(token, request);
+          requestRepository.removeRequest(event.order);
+          yield RequestCreated(request: request);
           return;
         }
       } catch (error) {

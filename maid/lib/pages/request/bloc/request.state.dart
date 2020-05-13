@@ -67,6 +67,29 @@ class RequestAdditionalInfoUpdated extends RequestState {
       'RequestAdditionalInfoUpdated { id: ${request.id}, maid: ${request.maid}, order: ${request.order}, table: ${request.table} }';
 }
 
+class RequestCreated extends RequestState {
+  final Request request;
+
+  const RequestCreated({
+    this.request
+  });
+
+  RequestCreated copyWith({
+    Request request
+  }) {
+    return RequestCreated(
+      request: request ?? this.request
+    );
+  }
+
+  @override
+  List<Object> get props => [request];
+
+  @override
+  String toString() =>
+      'RequestCreated { id: ${request.id}, maid: ${request.maid}, order: ${request.order}, table: ${request.table} }';
+}
+
 class RequestLoaded extends RequestState {
   final Request request;
 

@@ -4,7 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maid/pages/order/bloc/order.service.dart';
 import 'package:maid/pages/order/bloc/order.bloc.dart';
 import 'package:maid/auth/auth.dart';
+import 'package:maid/pages/order/models/table.dart' as tableModel;
 import 'package:maid/pages/request/request.arguments.dart';
+
+import 'order/bloc/table.bloc.dart' as tableBloc;
+import 'order/bloc/table.service.dart';
 
 class OrderPage extends StatefulWidget {
   final AuthService userRepository;
@@ -19,8 +23,10 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderFormState extends State<OrderPage> {
+  final tableRepository = TableService();
   final _customerController = TextEditingController();
   String dropdownValue;
+  List<tableModel.Table> tables = [];
   
   @override
   Widget build(BuildContext context) {
@@ -38,7 +44,7 @@ class _OrderFormState extends State<OrderPage> {
                 state.order.id,
                 state.order.table,
               ));
-            } 
+            }
           },
           child: BlocBuilder<OrderBloc, OrderState>(
             builder: (context, state) {
@@ -53,45 +59,63 @@ class _OrderFormState extends State<OrderPage> {
                   child: Icon(Icons.add),
                   backgroundColor: Colors.red,
                 ),
-                body: Form(
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        decoration: InputDecoration(labelText: 'customer'),
-                        controller: _customerController,
-                      ),
-                      DropdownButton<String>(
-                        value: dropdownValue,
-                        icon: Icon(Icons.arrow_downward),
-                        iconSize: 24,
-                        elevation: 16,
-                        style: TextStyle(color: Colors.deepPurple),
-                        underline: Container(
-                          height: 2,
-                          color: Colors.deepPurpleAccent,
-                        ),
-                        onChanged: (String newValue) {
-                          setState(() {
-                            dropdownValue = newValue;
-                          });
-                        },
-                        items: <String>['Table 1', 'Table 2']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
+                body: 
+                  BlocProvider(
+                    create: (context) => tableBloc.TableBloc(
+                      tableRepository: tableRepository,
+                      userRepository: widget.userRepository,
+                    )..add(tableBloc.Fetch()),
+                    child: BlocListener<tableBloc.TableBloc, tableBloc.TableState>(
+                      listener: (context, state) {
+                      if (state is tableBloc.TableLoaded) {
+                          tables = state.tables;
+                        }
+                      },
+                      child: BlocBuilder<tableBloc.TableBloc, tableBloc.TableState>(
+                        builder: (context, state) {
+                          return Form(
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  decoration: InputDecoration(labelText: 'customer'),
+                                  controller: _customerController,
+                                ),
+                                DropdownButton<String>(
+                                  value: dropdownValue,
+                                  icon: Icon(Icons.arrow_downward),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  style: TextStyle(color: Colors.deepPurple),
+                                  underline: Container(
+                                    height: 2,
+                                    color: Colors.deepPurpleAccent,
+                                  ),
+                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      dropdownValue = newValue;
+                                    });
+                                  },
+                                  items: tables.map((table) => table.label)
+                                          .map<DropdownMenuItem<String>>((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList()
+                                ),
+                                Container(
+                                  child: state is OrderLoading
+                                      ? CircularProgressIndicator()
+                                      : null,
+                                ),
+                              ],
+                            ),
                           );
-                        }).toList(),
-                      ),
-                      Container(
-                        child: state is OrderLoading
-                            ? CircularProgressIndicator()
-                            : null,
-                      ),
-                    ],
-                  ),
-                )
-              );
+                        }
+                      )
+                    )
+                  )
+                );
             }
           ),
         ),
