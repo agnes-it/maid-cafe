@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maid/pages/order/bloc/order.service.dart';
 import 'package:maid/pages/order/bloc/order.bloc.dart';
 import 'package:maid/auth/auth.dart';
+import 'package:maid/pages/request/request.arguments.dart';
 
 class OrderPage extends StatefulWidget {
   final AuthService userRepository;
@@ -33,7 +34,10 @@ class _OrderFormState extends State<OrderPage> {
           listener: (context, state) {
           if (state is OrderCreated) {
               _parentOrderBloc.add(Fetch());
-              Navigator.of(context).pushReplacementNamed('/new_request');
+              Navigator.of(context).pushReplacementNamed('/new_request', arguments: RequestArguments(
+                state.order.id,
+                state.order.table,
+              ));
             } 
           },
           child: BlocBuilder<OrderBloc, OrderState>(
