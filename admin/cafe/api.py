@@ -1,23 +1,38 @@
 from django.urls import path, include
 from django.contrib.auth.models import User
-from .models import Order, Request, Table, Menu
+from django.db import transaction
+from .models import Order, Request, Table, Menu, RequestMenu
 from rest_framework import routers, serializers, viewsets
 from rest_framework.validators import UniqueValidator
 from rest_framework.permissions import IsAuthenticated
 from cafe.helpers import server_time
 
+class RequestMenuItemSerializer(serializers.ModelSerializer):
+    item = serializers.ReadOnlyField(source='menu.item')
 
-# Serializers define the API representation.
+    class Meta:
+        model = RequestMenu
+        fields = ('item', 'menu', 'amount',)
+
+
 class RequestSerializer(serializers.HyperlinkedModelSerializer):
     maid = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field="username")
     table = serializers.SlugRelatedField(queryset=Table.objects.all(), slug_field="label")
-    menu = serializers.SlugRelatedField(queryset=Menu.objects.all(), many=True, slug_field="item")
+    menus = RequestMenuItemSerializer(source='requestmenu_set', many=True)
     order = serializers.SlugRelatedField(queryset=Order.objects.all(), slug_field="id", write_only=True)
 
     class Meta:
         model = Request
         fields = ('id', 'maid', 'client', 'table', 'order',
-                  'start_at', 'end_at', 'menu', 'finish', 'additional_info')
+                  'start_at', 'end_at', 'menus', 'finish', 'additional_info')
+    
+    def create(self, validated_data):
+        with transaction.atomic():
+            menus = validated_data.pop('requestmenu_set')
+            instance = Request.objects.create(**validated_data)
+            for request_menu in menus:
+                RequestMenu.objects.create(menu=request_menu['menu'], amount=request_menu['amount'], request=instance)
+            return instance
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     table = serializers.SlugRelatedField(queryset=Table.objects.all(), slug_field="label")

@@ -27,7 +27,7 @@ class Menu(models.Model):
         return self.item
 
 class Order(models.Model):
-    client = models.CharField(max_length=255)
+    client = models.CharField(max_length=255, blank=True, null=True)
     table = models.ForeignKey(Table, on_delete=models.PROTECT)
     paid = models.BooleanField(default=False)
     start_at = models.DateTimeField(auto_now_add=True)
@@ -41,7 +41,7 @@ class Order(models.Model):
 
 class Request(models.Model):
     maid = models.ForeignKey(User, on_delete=models.PROTECT)
-    client = models.CharField(max_length=255)
+    client = models.CharField(max_length=255, blank=True, null=True)
     table = models.ForeignKey(Table, on_delete=models.PROTECT)
     order = models.ForeignKey(
         Order,
@@ -51,7 +51,7 @@ class Request(models.Model):
     )
     start_at = models.DateTimeField(auto_now_add=True)
     end_at = models.DateTimeField(blank=True, null=True)
-    menu = models.ManyToManyField(Menu)
+    menus = models.ManyToManyField(Menu, through="RequestMenu")
     finish = models.BooleanField(default=False)
     additional_info = models.TextField(blank=True, null=True)
 
@@ -60,3 +60,8 @@ class Request(models.Model):
 
     def __unicode__(self):
         return "{customer} - {table} [{start}]".format(customer=self.client, table=self.table.label, start=self.start_at)
+
+class RequestMenu(models.Model):
+    request = models.ForeignKey(Request, on_delete=models.PROTECT)
+    menu = models.ForeignKey(Menu, on_delete=models.PROTECT)
+    amount = models.IntegerField()

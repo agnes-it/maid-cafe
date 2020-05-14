@@ -20,7 +20,7 @@ export default function Card({ bill, onFinishBill }) {
             >
                 <div className="mb-8">
                     <div className="text-gray-900 font-bold text-xl mb-2">
-                        {bill.menu.join(', ')}
+                        {bill.menus.map(menu => `x${menu.amount} ${menu.item}`).join(', ')}
                     </div>
                     <p className="text-gray-700 text-base">
                         {bill.additional_info

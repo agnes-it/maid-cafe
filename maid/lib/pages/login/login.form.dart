@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:maid/auth/auth.dart';
 import 'package:maid/pages/login/bloc/login.bloc.dart';
 
 class LoginForm extends StatefulWidget {

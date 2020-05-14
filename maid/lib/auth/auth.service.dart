@@ -13,6 +13,20 @@ class AuthIOException implements Exception {
    String errMsg() => 'Something went wrong, please try again and communicate our support'; 
 }
 
+class AuthenticatedClient extends http.BaseClient {
+  final String token;
+  final http.Client _inner;
+
+  AuthenticatedClient(this.token, this._inner);
+
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    request.headers['authorization'] = "Token $token";
+    request.headers['Accept'] = "application/json";
+    request.headers['Content-type'] = "application/json";
+    return _inner.send(request);
+  }
+}
+
 class AuthService {
   Future<String> authenticate(String username, String password) async {
     final url = 'http://10.0.2.2:8000/api-token-auth/';
@@ -38,6 +52,18 @@ class AuthService {
   Future<bool> authenticated() async {
     final token = await storage.read(key: 'token');
     return token?.isNotEmpty ?? false;
+  }
+
+  Future<void> persistUsername(String username) async {
+    await storage.write(key: 'username', value: username);
+  }
+
+  Future<String> getUsername() async {
+    return await storage.read(key: 'username');
+  }
+
+  Future<void> deleteUsername() async {
+    await storage.delete(key: 'username');
   }
 
   Future<void> persistToken(String token) async {
