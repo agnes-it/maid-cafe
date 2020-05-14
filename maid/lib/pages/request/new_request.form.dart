@@ -15,8 +15,17 @@ class RequestForm extends StatefulWidget {
   final MenuService menuRepository;
   final AuthService userRepository;
   final RequestService requestRepository;
+  final int orderId;
+  final String tableName;
 
-  RequestForm({Key key, @required this.requestRepository, @required this.menuRepository, @required this.userRepository})
+  RequestForm({
+    Key key,
+    @required this.requestRepository,
+    @required this.menuRepository,
+    @required this.userRepository,
+    @required this.orderId,
+    @required this.tableName
+    })
       : assert(menuRepository != null, userRepository != null),
         super(key: key);
 
@@ -35,8 +44,7 @@ class _RequestPageState extends State<RequestForm> {
       listener: (context, state) {
         if (state is MenuLoaded) {
           entries = state.menus;
-          // @TODO: order is hardcoded
-          _requestBloc.add(New(order: 1, table: "Table 1"));
+          _requestBloc.add(New(order: widget.orderId, table: widget.tableName));
         }
 
         if (state is MenuError) {
@@ -73,8 +81,7 @@ class _RequestPageState extends State<RequestForm> {
         menuRepository: widget.menuRepository,
         userRepository: widget.userRepository,
         requestRepository: widget.requestRepository
-      // @TODO: order is hardcoded
-      )..add(New(order: 1, table: "Table 1")),
+      )..add(New(order: widget.orderId, table: widget.tableName)),
       child: RequestMenuInput(
         menu: entries[index],
         menuRepository: widget.menuRepository,

@@ -6,6 +6,7 @@ import 'package:maid/pages/request/bloc/request.service.dart';
 import 'package:maid/pages/request/bloc/menu.bloc.dart';
 import 'package:maid/pages/request/bloc/request.bloc.dart';
 import 'package:maid/pages/request/new_request.form.dart';
+import 'package:maid/pages/request/request.arguments.dart';
 
 
 class RequestPage extends StatelessWidget {
@@ -19,13 +20,17 @@ class RequestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final RequestArguments args = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
         title: Text('New Request'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/request_review');
+          Navigator.pushNamed(context, '/request_review', arguments: RequestArguments(
+            args.orderId,
+            args.tableName,
+          ));
         },
         child: Icon(Icons.send),
         backgroundColor: Colors.red,
@@ -46,6 +51,8 @@ class RequestPage extends StatelessWidget {
             menuRepository: menuRepository,
             userRepository: userRepository,
             requestRepository: requestRepository,
+            orderId: args.orderId,
+            tableName: args.tableName,
           ),
         ),
       ),

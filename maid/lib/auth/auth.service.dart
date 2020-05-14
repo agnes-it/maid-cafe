@@ -21,6 +21,8 @@ class AuthenticatedClient extends http.BaseClient {
 
   Future<http.StreamedResponse> send(http.BaseRequest request) {
     request.headers['authorization'] = "Token $token";
+    request.headers['Accept'] = "application/json";
+    request.headers['Content-type'] = "application/json";
     return _inner.send(request);
   }
 }

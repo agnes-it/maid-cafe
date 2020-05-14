@@ -63,7 +63,7 @@ class _RequestMenuState extends State<RequestMenuInput> {
                       decimalPlaces: 0,
                       onChanged: (value) {
                         setState(() {
-                          BlocProvider.of<RequestBloc>(context).add(UpdateRequestMenu(menu: widget.menu.id, amount: value));
+                          BlocProvider.of<RequestBloc>(context).add(UpdateRequestMenu(item: widget.menu.item, menu: widget.menu.id, amount: value));
                           _updateFieldControllers(widget.menu.id, value, context);
                         });
                       },

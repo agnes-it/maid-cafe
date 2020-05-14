@@ -32,13 +32,14 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   @override
   Stream<RequestState> mapEventToState(RequestEvent event) async* {
     final currentState = state;
+    final String maid = await userRepository.getUsername();
+
     if (event is New) {
       try {
-        final String maid = await userRepository.getUsername();
         if (currentState is RequestUninitialized) {
           Request request;
-          if (await requestRepository.hasRequest(event.order)) {
-            request = await requestRepository.getRequest(event.order);
+          if (requestRepository.hasRequest(event.order)) {
+            request = requestRepository.getRequest(event.order);
           } else {
             request = requestRepository.of(maid, event.order, event.table, []);
           }
@@ -47,8 +48,8 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
         }
         if (currentState is RequestLoaded) {
           Request request;
-          if (await requestRepository.hasRequest(event.order)) {
-            request = await requestRepository.getRequest(event.order);
+          if (requestRepository.hasRequest(event.order)) {
+            request = requestRepository.getRequest(event.order);
           } else {
             request = requestRepository.of(maid, event.order, event.table, []);
           }
@@ -60,6 +61,27 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
       }
     }
 
+    if (event is Create) {
+      //try {
+        if (currentState is RequestLoaded) {
+          Request request;
+          if (requestRepository.hasRequest(event.order)) {
+            request = requestRepository.getRequest(event.order);
+          } else {
+            yield RequestError(error: "Cannot find request in storage");
+            return;
+          }
+          final String token = await userRepository.getToken();
+          request = await requestRepository.create(token, request);
+          requestRepository.removeRequest(event.order);
+          yield RequestCreated(request: request);
+          return;
+        }
+      //} catch (error) {
+      //  yield RequestError(error: error.toString());
+      //}
+    }
+
     if (event is UpdateRequestMenu) {
       try {
         if (currentState is RequestUninitialized) {
@@ -67,7 +89,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
           return;
         }
         if (currentState is RequestLoaded || currentState is RequestMenuUpdated || currentState is RequestAdditionalInfoUpdated) {
-          final requestMenu = requestRepository.requestMenu(event.menu, event.amount);
+          final requestMenu = requestRepository.requestMenu(event.item, event.menu, event.amount);
           requestRepository.persistRequest(requestRepository.request);
           yield RequestMenuUpdated(requestMenu: requestMenu);
           return;

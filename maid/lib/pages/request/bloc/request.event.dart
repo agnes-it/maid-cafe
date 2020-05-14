@@ -7,10 +7,12 @@ abstract class RequestEvent extends Equatable {
 
 class UpdateRequestMenu extends RequestEvent {
   final int menu;
+  final String item;
   final int amount;
   
   UpdateRequestMenu({
     @required this.menu,
+    @required this.item,
     @required this.amount,
   })  : assert(menu != null,
               amount != null);
@@ -29,6 +31,17 @@ class New extends RequestEvent {
   final String table;
   
   New({
+    @required this.order,
+    @required this.table,
+  })  : assert(
+              order != null);
+}
+
+class Create extends RequestEvent {
+  final int order;
+  final String table;
+  
+  Create({
     @required this.order,
     @required this.table,
   })  : assert(

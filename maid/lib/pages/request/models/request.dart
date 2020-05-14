@@ -9,6 +9,7 @@ class Request extends Equatable {
   final String table;
   final List<RequestMenu> menus;
   String additionalInfo;
+  String client = '';
 
   String get info {
     return additionalInfo;
@@ -18,10 +19,10 @@ class Request extends Equatable {
     additionalInfo = _additionalInfo;
   }
 
-  Request({this.id, this.maid, this.table, this.menus, this.order, this.additionalInfo});
+  Request({this.id, this.maid, this.table, this.client, this.menus, this.order, this.additionalInfo});
 
   @override
-  List<Object> get props => [id, maid, table, menus, order, additionalInfo];
+  List<Object> get props => [id, maid, table, client, menus, order, additionalInfo];
 
   @override
   String toString() => 'Request { id: $id, order: $order }';
@@ -31,7 +32,8 @@ class Request extends Equatable {
         order = json['order'],
         maid = json['maid'],
         table = json['table'],
-        menus = List.from(json['menus']).map((requestMenu) => RequestMenu.fromJson(requestMenu)),
+        client = json['client'] ?? '',
+        menus = List.from(json['menus']).map((requestMenu) => RequestMenu.fromJson(requestMenu)).toList(),
         additionalInfo = json['additionalInfo'];
 
   Map<String, dynamic> toJson() =>
@@ -40,12 +42,13 @@ class Request extends Equatable {
       'order': order,
       'maid': maid,
       'table': table,
-      'menus': menus.map((requestMenu) => requestMenu.toJson()),
+      'client': client,
+      'menus': menus.map((requestMenu) => requestMenu.toJson()).toList(),
       'additionalInfo': additionalInfo,
     };
 
-  RequestMenu appendMenu(int menu, int amount) {
-    RequestMenu requestMenu = new RequestMenu(menu: menu, amount: amount);
+  RequestMenu appendMenu(int menu, String item, int amount) {
+    RequestMenu requestMenu = new RequestMenu(menu: menu, item: item, amount: amount);
     menus.add(requestMenu);
     return requestMenu;
   }
