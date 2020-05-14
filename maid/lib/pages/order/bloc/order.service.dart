@@ -2,12 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:maid/pages/order/models/order.dart';
 import 'package:maid/auth/auth.service.dart';
-
-final storage = new FlutterSecureStorage();
 
 class OrderIOException implements Exception { 
    String errMsg() => 'Something went wrong, please try again and communicate our support'; 

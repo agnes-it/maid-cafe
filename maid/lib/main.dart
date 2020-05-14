@@ -89,7 +89,7 @@ class App extends StatelessWidget {
         '/login': (BuildContext context) => new LoginPage(userRepository: userRepository),
         '/new_order': (BuildContext context) => new OrderPage(userRepository: userRepository, orderRepository: orderRepository),
         '/new_request': (BuildContext context) => new RequestPage(userRepository: userRepository, menuRepository: menuRepository),
-        '/request_review': (BuildContext context) => new RequestReviewPage(),
+        '/request_review': (BuildContext context) => new RequestReviewPage(userRepository: userRepository, menuRepository: menuRepository),
       },
     );
   }

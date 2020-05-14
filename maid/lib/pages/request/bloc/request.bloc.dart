@@ -38,8 +38,8 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
       try {
         if (currentState is RequestUninitialized) {
           Request request;
-          if (await requestRepository.hasRequest(event.order)) {
-            request = await requestRepository.getRequest(event.order);
+          if (requestRepository.hasRequest(event.order)) {
+            request = requestRepository.getRequest(event.order);
           } else {
             request = requestRepository.of(maid, event.order, event.table, []);
           }
@@ -48,8 +48,8 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
         }
         if (currentState is RequestLoaded) {
           Request request;
-          if (await requestRepository.hasRequest(event.order)) {
-            request = await requestRepository.getRequest(event.order);
+          if (requestRepository.hasRequest(event.order)) {
+            request = requestRepository.getRequest(event.order);
           } else {
             request = requestRepository.of(maid, event.order, event.table, []);
           }
@@ -62,11 +62,11 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
     }
 
     if (event is Create) {
-      try {
+      //try {
         if (currentState is RequestLoaded) {
           Request request;
-          if (await requestRepository.hasRequest(event.order)) {
-            request = await requestRepository.getRequest(event.order);
+          if (requestRepository.hasRequest(event.order)) {
+            request = requestRepository.getRequest(event.order);
           } else {
             yield RequestError(error: "Cannot find request in storage");
             return;
@@ -77,9 +77,9 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
           yield RequestCreated(request: request);
           return;
         }
-      } catch (error) {
-        yield RequestError(error: error.toString());
-      }
+      //} catch (error) {
+      //  yield RequestError(error: error.toString());
+      //}
     }
 
     if (event is UpdateRequestMenu) {
@@ -89,7 +89,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
           return;
         }
         if (currentState is RequestLoaded || currentState is RequestMenuUpdated || currentState is RequestAdditionalInfoUpdated) {
-          final requestMenu = requestRepository.requestMenu(event.menu, event.amount);
+          final requestMenu = requestRepository.requestMenu(event.item, event.menu, event.amount);
           requestRepository.persistRequest(requestRepository.request);
           yield RequestMenuUpdated(requestMenu: requestMenu);
           return;

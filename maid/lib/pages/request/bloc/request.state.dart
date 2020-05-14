@@ -41,7 +41,7 @@ class RequestMenuUpdated extends RequestState {
 
   @override
   String toString() =>
-      'RequestMenuUpdated { menu: ${requestMenu.menu}, amount: ${requestMenu.amount} }';
+      'RequestMenuUpdated { menu: ${requestMenu.menu}, item: ${requestMenu.item}, amount: ${requestMenu.amount} }';
 }
 
 class RequestAdditionalInfoUpdated extends RequestState {
