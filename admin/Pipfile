@@ -9,7 +9,7 @@ verify_ssl = true
 appdirs = "==1.4.4"
 django-cors-headers = "==3.2.1"
 django-filter = "==1.0.1"
-djangorestframework = "==3.11.0"
+djangorestframework = "==3.11.2"
 py-moneyed = "==0.8.0"
 pyparsing = "==2.2.0"
 six = "==1.14.0"
