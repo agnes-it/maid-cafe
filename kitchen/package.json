@@ -48,7 +48,7 @@
     "webpackbar": "^4.0.0"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "lodash": "^4.17.15",
     "lodash.isequal": "^4.5.0",
     "prop-types": "^15.7.2",
